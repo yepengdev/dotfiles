@@ -1,0 +1,163 @@
+{
+  "layer": "bottom",
+  "position": "top",
+  "height": 35,
+  "spacing": 4,
+  
+  "modules-left": [
+    "hyprland/workspaces",
+    "hyprland/window"
+  ],
+  "modules-center": [
+    "clock"
+  ],
+  "modules-right": [
+    "cpu",
+    "memory",
+    "temperature",
+    "disk",
+    "battery",
+    "pulseaudio",
+    "network",
+    "bluetooth",
+    //"custom/net-speed",
+    "tray",
+    "power-profiles-daemon",
+    "custom/power"
+  ],
+
+  // Hyprland modules
+  "hyprland/workspaces": {
+    "disable-scroll": true,
+    "all-outputs": true,
+    "format": "{name}",
+    "format-icons": {
+      "default": "",
+      "active": "",
+      "urgent": ""
+    }
+  },
+
+  "hyprland/window": {
+    "format": "{}",
+    "separate-outputs": true,
+    "max-length": 50
+  },
+
+  // System monitoring
+  "cpu": {
+    "format": " {usage}%",
+    "tooltip": true,
+    "interval": 2
+  },
+
+  "memory": {
+    "format": " {}%",
+    "format-alt": " {used:0.1f}G",
+    "interval": 2
+  },
+
+  "temperature": {
+    "thermal-zone": 0,
+    "hwmon-path": "/sys/class/hwmon/hwmon0/temp1_input",
+    "format": " {temperatureC}°C",
+    "critical-threshold": 80,
+    "format-critical": " {temperatureC}°C",
+    "interval": 2
+  },
+
+  "disk": {
+    "format": " {percentage_used}%",
+    "path": "/",
+    "interval": 30
+  },
+
+  // Power management
+  "power-profiles-daemon": {
+    "format": "{icon}",
+    "format-icons": {
+      "performance": "",
+      "balanced": "",
+      "power-saver": ""
+    },
+    "tooltip-format": "Power Profile: {profile}"
+  },
+
+  "battery": {
+    "states": {
+      "good": 95,
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{icon} {capacity}%",
+    "format-charging": " {capacity}%",
+    "format-plugged": " {capacity}%",
+    "format-alt": "{icon} {time}",
+    "format-icons": [" ", " ", " ", " ", " "],
+    "interval": 5
+  },
+
+  // Audio
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": " Muted",
+    "format-icons": ["", "", ""],
+    "scroll-step": 5,
+    "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+    "on-click-right": "pavucontrol"
+  },
+
+  // Network
+  "network": {
+    "format-wifi": "  {essid}",
+    "format-ethernet": " {ifname}",
+    "format-disconnected": " Disconnected",
+    "tooltip-format": "{ifname}: {ipaddr}",
+    "interval": 5
+  },
+
+  // Clock
+  "clock": {
+    "format": " {:%H:%M}",
+    "format-alt": " {:%Y-%m-%d}",
+    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+    "interval": 30
+  },
+
+  // System tray
+  "tray": {
+    "icon-size": 16,
+    "spacing": 8
+  },
+
+  // Power menu
+  "custom/power": {
+    "format": "⏻",
+    "on-click": "wlogout",
+    "tooltip": false
+  },
+
+"custom/net-speed": {
+    "exec": "~/.config/waybar/net-speed.sh",
+    "interval": 1,
+    "format": "{}"
+},
+// 蓝牙配置
+  "bluetooth": {
+    "format": "",
+    "format-disabled": "󰂲", // 蓝牙关闭
+    "format-connected": " {device_alias}", // 蓝牙已连接
+    "format-connected-battery": " {device_alias} {device_battery_percentage}%",
+    "tooltip-format": " {controller_alias}\t{status}",
+    "tooltip-format-connected": " {controller_alias}\t{status}\n{device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+    "on-click": "blueman-manager", // 点击打开蓝牙管理器
+    "on-click-right": "bluetoothctl power toggle" // 右键切换蓝牙开关
+  },
+}
+
+
+// Local Variables:
+// comment-start: "//"
+// comment-end: ""
+// End:

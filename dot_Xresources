@@ -1,0 +1,124 @@
+! One Dark Pro Xresources colors
+! Based on the popular One Dark Pro theme
+
+! Basic colors (color0-7)
+*.color0:  #282c34
+*.color1:  #e06c75
+*.color2:  #98c379
+*.color3:  #e5c07b
+*.color4:  #61afef
+*.color5:  #c678dd
+*.color6:  #56b6c2
+*.color7:  #abb2bf
+
+! Bright colors (color8-15)
+*.color8:  #5c6370
+*.color9:  #e06c75
+*.color10: #98c379
+*.color11: #e5c07b
+*.color12: #61afef
+*.color13: #c678dd
+*.color14: #56b6c2
+*.color15: #ffffff
+
+! Terminal colors
+*.foreground: #abb2bf
+*.background: #282c34
+*.cursorColor: #528bff
+
+! Selection colors
+*.highlightColor: #3e4451
+*.highlightTextColor: #abb2bf
+
+! Urgent bell border color
+*.bellColor: #e06c75
+
+! UI element colors (for some terminals)
+*.colorBD: #ffffff      ! Bold text
+*.colorIT: #c678dd      ! Italic text
+*.colorUL: #56b6c2      ! Underline text
+
+! Optional: Set specific application colors
+URxvt*background: #282c34
+URxvt*foreground: #abb2bf
+URxvt*cursorColor: #528bff
+
+! For st (simple terminal)
+st.background: #282c34
+st.foreground: #abb2bf
+st.cursorColor: #528bff
+
+! XTerm configuration
+XTerm*background: #282c34
+XTerm*foreground: #abb2bf
+XTerm*cursorColor: #528bff
+XTerm*highlightColor: #3e4451
+XTerm*highlightTextColor: #abb2bf
+
+! Kitty terminal (if used)
+kitty.background: #282c34
+kitty.foreground: #abb2bf
+kitty.cursor_color: #528bff
+kitty.selection_background: #3e4451
+kitty.color0: #282c34
+kitty.color1: #e06c75
+kitty.color2: #98c379
+kitty.color3: #e5c07b
+kitty.color4: #61afef
+kitty.color5: #c678dd
+kitty.color6: #56b6c2
+kitty.color7: #abb2bf
+kitty.color8: #5c6370
+kitty.color9: #e06c75
+kitty.color10: #98c379
+kitty.color11: #e5c07b
+kitty.color12: #61afef
+kitty.color13: #c678dd
+kitty.color14: #56b6c2
+kitty.color15: #ffffff
+
+! Alacritty terminal (if used)
+alacritty.colors.primary.background: '#282c34'
+alacritty.colors.primary.foreground: '#abb2bf'
+alacritty.colors.cursor.cursor: '#528bff'
+alacritty.colors.cursor.text: '#282c34'
+alacritty.colors.normal.black: '#282c34'
+alacritty.colors.normal.red: '#e06c75'
+alacritty.colors.normal.green: '#98c379'
+alacritty.colors.normal.yellow: '#e5c07b'
+alacritty.colors.normal.blue: '#61afef'
+alacritty.colors.normal.magenta: '#c678dd'
+alacritty.colors.normal.cyan: '#56b6c2'
+alacritty.colors.normal.white: '#abb2bf'
+alacritty.colors.bright.black: '#5c6370'
+alacritty.colors.bright.red: '#e06c75'
+alacritty.colors.bright.green: '#98c379'
+alacritty.colors.bright.yellow: '#e5c07b'
+alacritty.colors.bright.blue: '#61afef'
+alacritty.colors.bright.magenta: '#c678dd'
+alacritty.colors.bright.cyan: '#56b6c2'
+alacritty.colors.bright.white: '#ffffff'
+
+! For rofi (application launcher)
+rofi.color-window: #282c34, #282c34, #e06c75
+rofi.color-normal: #282c34, #abb2bf, #3e4451, #528bff, #ffffff
+rofi.color-active: #282c34, #61afef, #3e4451, #528bff, #61afef
+rofi.color-urgent: #282c34, #e06c75, #3e4451, #528bff, #e06c75
+
+! For dmenu
+dmenu.background: #282c34
+dmenu.foreground: #abb2bf
+dmenu.selbackground: #528bff
+dmenu.selforeground: #282c34
+
+! For lemonbar/polybar (example)
+*.bar.background: #282c34
+*.bar.foreground: #abb2bf
+*.bar.primary: #61afef
+*.bar.secondary: #c678dd
+*.bar.alert: #e06c75
+*.bar.warning: #e5c07b
+*.bar.success: #98c379
+
+
+Xcursor.size: 24

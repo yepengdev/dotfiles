@@ -1,0 +1,110 @@
+# ===== 全局设置 =====
+max-history=50
+sort=-time
+max-visible=5
+history=1
+
+# ===== 样式设置 =====
+# 字体
+font=JetBrains Mono Nerd Font 11
+
+# 颜色方案 (深色主题)
+background-color=#1e1e2e
+text-color=#cdd6f4
+border-color=#585b70
+
+# 尺寸和间距
+width=400
+height=120
+border-size=2
+border-radius=8
+padding=12
+margin=10
+outer-margin=40
+
+# 进度条
+progress-color=over #89b4fa
+
+# 图标
+icons=1
+max-icon-size=48
+icon-path=/usr/share/icons/Papirus:/usr/share/icons/Adwaita
+icon-location=left
+icon-border-radius=4
+
+# 文本
+markup=1
+actions=1
+text-alignment=left
+format=<b>%a</b> - %s\n%b
+
+# 位置和层级
+layer=overlay
+anchor=top-right
+output=
+
+# 超时设置
+default-timeout=5000
+ignore-timeout=0
+
+# 分组
+group-by=app-name,desktop-entry
+
+# ===== 绑定设置 =====
+# 鼠标绑定
+on-button-left=invoke-default-action
+on-button-middle=exec makoctl menu -n "$id" | xargs -I {} makoctl invoke -n "$id" -a "{}"
+on-button-right=dismiss
+on-touch=dismiss
+
+# 新通知动作
+on-notify=exec paplay /usr/share/sounds/freedesktop/stereo/message.oga
+
+# ===== 条件样式 =====
+# 高优先级通知 (红色主题)
+[urgency=critical]
+background-color=#f38ba8
+text-color=#11111b
+border-color=#eba0ac
+default-timeout=0
+format=<b>⚠️ %a</b> - %s\n%b
+
+# 低优先级通知 (更低调)
+[urgency=low]
+background-color=#313244
+text-color=#a6adc8
+border-color=#45475a
+default-timeout=3000
+
+# 特定应用样式
+[app-name="Spotify"]
+background-color=#1db954
+text-color=#191414
+border-color=#1ed760
+format=🎵 <b>%a</b> - %s\n%b
+
+[app-name="Discord"]
+background-color=#5865f2
+text-color=#ffffff
+border-color=#4752c4
+
+[app-name="firefox" summary~=".*[Ff]irefox.*"]
+background-color=#ff9500
+text-color=#000000
+
+# 长消息通知调整
+[body~=.{100,}]
+height=180
+format=<b>%a</b> - %s\n<span size='small'>%b</span>
+
+# 分组通知样式
+[grouped]
+format=(%g) <b>%s</b>\n%b
+
+[group-index=0]
+invisible=0
+
+# 隐藏通知占位符
+[hidden]
+format=%h/%t hidden notifications
+background-color=#181825

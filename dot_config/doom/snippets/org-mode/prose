@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: prose
+# key: __prose_block
+# expand-env: ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# --
+** ${1:段落标题 — 简短描述} :ignore:
+:PROPERTIES:
+:ID: `(org-id-new)`
+:PROSE-ID: ${2:`(format-time-string "%Y%m%d%H%M%S")`}
+:TYPE: ${3:描述/过渡/解说/内心独白}
+:END:
+
+$0

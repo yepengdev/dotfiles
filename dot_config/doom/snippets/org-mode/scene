@@ -1,0 +1,27 @@
+# -*- mode: snippet -*-
+# name: novel scene template
+# key: __scene_heading
+# expand-env: ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# --
+* ${1:场景标题}                                               :scene:
+:PROPERTIES:
+:ID:              `(org-id-new)`
+:POV:             ${3:人物A}
+:Location:        ${4:地点}
+:Time:            ${5:时间}
+:Goal:            ${6:此场景的目标}
+:Conflict:        ${7:外部/内部冲突描述}
+:TensionScore:    ${8:1-10}
+:Outcome:         ${9:结果/转折}
+:Status:          ${10|idea,draft,revise,done|}
+:Words:           ${11:0}
+:Arc:             ${12|Act1,Act2,Act3,Inciting Incident,Midpoint,Climax|}
+:Characters:      ${13:人物A, 人物B}
+:Next:            ${14:id:scene-XXX}
+:END:
+
+** 概述 (Summary)
+${15:一句话概括场景内容。}
+
+** 笔记 (Notes)
+$0

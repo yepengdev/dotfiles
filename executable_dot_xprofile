@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# This file runs when a DM logs you into a graphical session.
+# If you use startx/xinit like a Chad, this file will also be sourced.
+
+#xrandr --dpi 96		# Set DPI. User may want to use a larger number for larger screens.
+# setbg &			# set the background with the `setbg` script
+#xrdb ${XDG_CONFIG_HOME:-$HOME/.config}/x11/xresources & xrdbpid=$!	# Uncomment to use Xresources colors/settings on startup
+
+export XMODIFIERS=@im=fcitx
+export GTK_IM_MODULE=fcitx 
+export QT_IM_MODULE=fcitx
+export SDL_IM_MODULE=fcitx
+xrdb ~/.Xresources & xrdbpid=$!	# Uncomment to use Xresources colors/settings on startup
+xset r rate 200 40
+
+xcompmgr& 
+
+xwallpaper --zoom ~/Pictures/dinosaur-kid-night-travel-discover-moon-silhouette-3500x3000-1057.jpg &
+
+# export http_proxy=http://127.0.0.1:7890
+# export https_proxy=http://127.0.0.1:7890
+cd ~/.config/clash && clash-rs -c ~/.config/clash/config.yaml &
+
+fcitx5 -d &
+
+autostart="dwmblocks xcompmgr dunst pipewire nm-applet"
+
+for program in $autostart; do
+	pidof -sx "$program" || "$program" &
+done >/dev/null 2>&1
+
+# Ensure that xrdb has finished running before moving on to start the WM/DE.
+[ -n "$xrdbpid" ] && wait "$xrdbpid"
+xrdb -load ~/.Xresources

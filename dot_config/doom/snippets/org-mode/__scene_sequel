@@ -1,0 +1,28 @@
+# -*- mode: snippet -*-
+# name: Scene Sequel
+# uuid:
+# key: __scene_sequel
+# expand-env: ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# --
+** ${1:Scene — Title} :ignore:
+:PROPERTIES:
+:ID:      `(org-id-new)`
+:SCENE-ID: ${2:`(format-time-string "%Y%m%d%H%M%S")`}
+:POV: ${3:Mara}
+:LOCATION: ${4:Train Station}
+:GOAL: ${5:场景目标}
+:CONFLICT: ${6:}
+:Disaster: ${7:Yes, but/No, and/No, But}
+:END:
+
+$0
+
+** ${8:Sequel — Title} :ignore:
+:PROPERTIES:
+:ID:      `(org-id-new)`
+:SEQUEL-ID: ${9:`(format-time-string "%Y%m%d%H%M%S")`}
+:FEELING: ${10:}
+:THOUGHT: ${11:想法/思考}
+:DECISION: ${12:决定}
+:ACTION: ${13:行动}
+:END:
