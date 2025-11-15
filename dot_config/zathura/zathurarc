@@ -1,25 +1,248 @@
-set sandbox none
-set statusbar-h-padding 0
-set statusbar-v-padding 0
-set page-padding 1
-set selection-clipboard clipboard
-map u scroll half-up
-map d scroll half-down
-map D toggle_page_mode
+# 外观设置
+set default-bg           "#000000"
+set default-fg           "#DDDDDD"
+set statusbar-bg         "#131313"
+set statusbar-fg         "#9FBC00"
+set inputbar-bg          "#232323"
+set inputbar-fg          "#9FBC00"
+set completion-bg        "#232323"
+set completion-fg        "#DDDDDD"
+set completion-highlight-bg "#9FBC00"
+set completion-highlight-fg "#232323"
+set index-bg             "#232323"
+set index-fg             "#DDDDDD"
+set index-active-bg      "#9FBC00"
+set index-active-fg      "#232323"
+
+# 字体设置
+set font "monospace normal 10"
+
+# 界面元素
+set guioptions "sv"  # 显示状态栏和垂直滚动条
+set show-hidden false
+set show-directories true
+set show-recent 10
+
+# 页面显示
+set pages-per-row 1
+set page-h-padding 1
+set page-v-padding 1
+set scroll-step 40
+set scroll-full-overlap 0.0
+set scroll-page-aware true
+set zoom-step 10
+set zoom-min 20
+set zoom-max 500
+set zoom-center true
+set vertical-center false
+
+# 行为设置
+set continuous-hist-save true
+set open-first-page false
+set recolor false
+set recolor-keephue false
+set recolor-reverse-video false
+set incremental-search true
+set selection-clipboard "primary"
+set selection-notification true
+set double-click-follow true
+
+# SyncTeX 支持（您启用了 synctex USE 标志）
+set synctex true
+set synctex-editor-command "emacsclient +%{line} %{input}"
+set synctex-edit-modifier "ctrl"
+
+set highlight-color "rgba(159,251,0,0.5)"
+set highlight-active-color "rgba(0,188,0,0.5)"
+set highlight-fg "rgba(0,0,0,0.5)"
+set highlighter-modifier "shift"
+
+
+# 安全特性（您启用了 seccomp USE 标志）
+# seccomp 自动启用，无需额外配置
+
+# Wayland 支持（您启用了 wayland USE 标志）
+# Wayland 后端会自动使用
+#
+# ===== 基础导航 =====
+map <C-n> navigate next
+map <C-p> navigate previous
+map <C-d> scroll half-down
+map <C-u> scroll half-up
+map <C-f> scroll full-down
+map <C-b> scroll full-up
+map <Space> scroll full-down
+map <BackSpace> scroll full-up
+
+# ===== 缩放控制 =====
+map <C-=> zoom in
+map <C--> zoom out
+map <C-0> zoom best-fit
+map + zoom in
+map - zoom out
+map = zoom best-fit
+
+# ===== 页面调整 =====
+map a adjust_window best-fit
+map s adjust_window width
+
+# ===== 搜索和跳转 =====
+map / search
+map ? search backward
+map n search next
+map N search previous
+map [[ goto prev
+map ]] goto next
+map <C-g> abort
+
+# ===== SyncTeX 和链接 =====
+map <C-Button1> follow synctex
+map f follow
+map F display_link
+map <Return> follow
+
+# ===== 视图模式 =====
+map p toggle_page_mode
+map i toggle_index
+map <C-i> toggle_index
 map r reload
 map R rotate
-map K zoom in
-map J zoom out
-map i recolor
-map p print
-map g goto top
-map [fullscreen] u scroll half-up
-map [fullscreen] d scroll half-down
-map [fullscreen] D toggle_page_mode
-map [fullscreen] r reload
-map [fullscreen] R rotate
-map [fullscreen] K zoom in
-map [fullscreen] J zoom out
-map [fullscreen] i recolor
-map [fullscreen] p print
-map [fullscreen] g goto top
+
+# ===== 窗口管理 =====
+map w toggle_fullscreen
+map <F11> toggle_fullscreen
+
+# ===== 退出 =====
+map q quit
+map Q quit
+map <C-q> quit
+
+# ===== 输入栏命令 =====
+# ===== 书签系统 =====
+map m mark_add
+map \' mark_evaluate
+
+# ===== 高级导航 =====
+map gg goto 1
+map G goto -1
+map <C-o> jumplist backward
+map <C-i> jumplist forward
+
+# 输入栏命令
+# 数据库设置（用于书签和历史记录）
+set database "sqlite"
+
+# 文件监控
+set filemonitor "glib"
+
+# 跳转列表大小
+set jumplist-size 2000
+
+# 页面缓存优化
+set page-cache-size 20
+set page-thumbnail-size 8388608  # 8MB
+
+# 状态栏定制
+set statusbar-basename false
+set statusbar-home-tilde true
+set statusbar-page-percent true
+
+# 窗口标题
+set window-title-basename false
+set window-title-home-tilde true
+set window-title-page true
+
+# 高级搜索选项
+set search-hadjust true
+set nohlsearch false
+set abort-clear-search true
+
+# 链接行为
+set link-hadjust true
+set link-zoom true
+
+# ===== 移动命令 (Normal Mode) =====
+map h scroll left
+map j scroll down
+map k scroll up
+map l scroll right
+map <C-f> scroll full-down
+map <C-b> scroll full-up
+map <C-d> scroll half-down
+map <C-u> scroll half-up
+map gg goto 1
+map G goto -1
+map 0 scroll beginning
+map $ scroll end
+
+# ===== 页面导航 =====
+map J navigate next
+map K navigate previous
+map [[ goto prev
+map ]] goto next
+map <C-o> jumplist backward
+map <C-i> jumplist forward
+
+# ===== 缩放命令 =====
+map zi zoom in
+map zo zoom out
+map zz zoom best-fit
+map zI zoom in
+map zO zoom out
+map z= zoom best-fit
+map zR zoom 150
+map z- zoom 75
+
+# ===== 搜索命令 =====
+map / search
+map ? search backward
+map n search next
+map N search previous
+map * search selection forward
+map # search selection backward
+
+# ===== 文件操作 =====
+map :q quit
+map :wq quit
+map ZZ quit
+map ZQ quit
+map :reload reload
+map :open feedkeys ":open "
+
+# ===== 视图模式 =====
+map i toggle_inputbar
+map :set feedkeys ":set "
+map :map feedkeys ":map "
+map p toggle_page_mode
+map P toggle_fullscreen
+map :present change_mode presentation
+
+# ===== 窗口调整 =====
+map a adjust_window best-fit
+map A adjust_window width
+map r rotate
+map R rotate-cw
+map rR rotate-ccw
+
+# ===== 链接和跳转 =====
+map f follow
+map F display_link
+map gf follow
+map gF display_link
+map <Enter> follow
+
+# ===== 书签系统 =====
+map m mark_add
+map \' mark_evaluate
+map :marks feedkeys ":marks"
+
+# ===== 索引和目录 =====
+map :index toggle_index
+map :toc toggle_index
+
+# ===== 退出和取消 =====
+map <Esc> abort
+map <C-c> abort
+map q abort
+
+# ===== 输入模式 =====
