@@ -10,6 +10,7 @@ while :; do
     for file in "${shuffled_wallpapers[@]}"; do
         if [[ -f "$file" ]]; then  # 确保是文件而不是目录
             swww img "$file" --transition-type grow --transition-step 255 --transition-fps 60 --transition-pos top-right
+            notify-send "wallpaper changed"
             sleep 30m
         fi
     done

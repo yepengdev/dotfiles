@@ -9,4 +9,4 @@ fi
 
 # start dwm
 dbus-update-activation-environment --all
-dbus-launch ssh-agent dwm
+exec dbus-launch ssh-agent --sh-syntax --exit-with-session dwm

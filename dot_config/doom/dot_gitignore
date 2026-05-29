@@ -1,7 +1,1 @@
-.DS_Store
-.idea
-*.log
-tmp/
-
-_minted/
-config.el
+*.md

@@ -5,55 +5,64 @@
   "spacing": 4,
   
   "modules-left": [
-    "hyprland/workspaces",
-    "hyprland/window"
+    //"custom/gentoo",
+    "niri/workspaces"
   ],
   "modules-center": [
+    "niri/window",
     "clock"
   ],
-  "modules-right": [
-    "cpu",
-    "memory",
-    "temperature",
-    "disk",
-    "battery",
-    "pulseaudio",
-    "network",
-    "bluetooth",
     //"custom/net-speed",
-    "tray",
-    "power-profiles-daemon",
-    "custom/power"
+  "modules-right": [
+    "custom/pomodoro", // 核心模块
+//    "cpu",
+    //"memory",
+    // "temperature",
+    "network",
+     "pulseaudio",
+    // "bluetooth",
+     "battery",
+    //"custom/pomodoro",
+    "tray"
+    // "custom/power"
   ],
 
-  // Hyprland modules
-  "hyprland/workspaces": {
-    "disable-scroll": true,
-    "all-outputs": true,
-    "format": "{name}",
-    "format-icons": {
-      "default": "",
-      "active": "",
-      "urgent": ""
-    }
+  // Gentoo logo
+  "custom/gentoo": {
+    "format": "",
+    "tooltip": "Gentoo Linux"
   },
 
-  "hyprland/window": {
-    "format": "{}",
-    "separate-outputs": true,
-    "max-length": 50
-  },
+  // // Hyprland modules
+  // "niri/workspaces": {
+  //   "disable-scroll": true,
+  //   "all-outputs": true,
+  //   "format": "{name}",
+  //   "format-icons": {
+  //     "default": "",
+  //     "active": "",
+  //     "urgent": ""
+  //   }
+  // },
+
+  // "hyprland/window": {
+  //   "format": "{}",
+  //   "separate-outputs": true,
+  //   "max-length": 35
+  // },
 
   // System monitoring
   "cpu": {
     "format": " {usage}%",
-    "tooltip": true,
+    "format-alt": " {usage}% ({load})",
+    "tooltip-format": "CPU: {usage}%\nLoad: {load}",
     "interval": 2
   },
 
   "memory": {
     "format": " {}%",
-    "format-alt": " {used:0.1f}G",
+    "format-alt": " {used:0.1f}G/{total:0.1f}G",
+    "tooltip-format": "内存: {used:0.1f}G / {total:0.1f}G ({percentage}%)",
     "interval": 2
   },
 
@@ -63,25 +72,26 @@
     "format": " {temperatureC}°C",
     "critical-threshold": 80,
     "format-critical": " {temperatureC}°C",
+    "tooltip-format": "温度: {temperatureC}°C",
     "interval": 2
   },
 
-  "disk": {
-    "format": " {percentage_used}%",
-    "path": "/",
-    "interval": 30
-  },
+  //"disk": {
+  //  "format": " {percentage_used}%",
+  //  "path": "/",
+  //  "interval": 30
+  //},
 
   // Power management
-  "power-profiles-daemon": {
-    "format": "{icon}",
-    "format-icons": {
-      "performance": "",
-      "balanced": "",
-      "power-saver": ""
-    },
-    "tooltip-format": "Power Profile: {profile}"
-  },
+  //"power-profiles-daemon": {
+  //  "format": "{icon}",
+  //  "format-icons": {
+  //    "performance": "",
+  //    "balanced": "",
+  //    "power-saver": ""
+  //  },
+  //  "tooltip-format": "Power Profile: {profile}"
+  //},
 
   "battery": {
     "states": {
@@ -109,51 +119,74 @@
 
   // Network
   "network": {
-    "format-wifi": "  {essid}",
+    "format-wifi": " {essid}",
     "format-ethernet": " {ifname}",
-    "format-disconnected": " Disconnected",
-    "tooltip-format": "{ifname}: {ipaddr}",
+    "format-disconnected": " 断开",
+    "tooltip-format": "{ifname}: {ipaddr}\n信号强度: {signalStrength}%",
+    "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr}",
+    "tooltip-format-ethernet": "{ifname}\n{ipaddr}",
     "interval": 5
+  },
+
+  // Network speed
+  "custom/net-speed": {
+    "exec": "~/.config/waybar/net-speed.sh",
+    "interval": 1,
+    "tooltip": false
+  },
+
+  // Weather
+  "custom/weather": {
+    "exec": "~/.config/waybar/scripts/weather.sh",
+    "interval": 600,
+    "tooltip": true,
+    "on-click": "xdg-open 'https://wttr.in'"
   },
 
   // Clock
   "clock": {
     "format": " {:%H:%M}",
-    "format-alt": " {:%Y-%m-%d}",
-    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+    "format-alt": " {:%Y-%m-%d %H:%M}",
+    "tooltip-format": "<big>{:%Y年%m月%d日}</big>\n<tt><small>{calendar}</small></tt>",
+    "on-click": "swaymsg exec 'gnome-calendar' || swaymsg exec 'calcurse'",
     "interval": 30
   },
 
   // System tray
   "tray": {
-    "icon-size": 16,
-    "spacing": 8
+    "icon-size": 12,
+    "spacing": 4
   },
 
   // Power menu
   "custom/power": {
-    "format": "⏻",
+    "format": "'\u202f'⏻",
     "on-click": "wlogout",
     "tooltip": false
   },
 
-"custom/net-speed": {
-    "exec": "~/.config/waybar/net-speed.sh",
+  // Pomodoro timer
+  "custom/pomodoro": {
+    "exec": "~/.config/waybar/scripts/pomodoro.sh status",
     "interval": 1,
-    "format": "{}"
-},
-// 蓝牙配置
+    "on-click": "~/.config/waybar/scripts/pomodoro.sh toggle",
+    "on-click-middle": "~/.config/waybar/scripts/pomodoro.sh skip",
+    "on-click-right": "~/.config/waybar/scripts/pomodoro.sh reset",
+    "tooltip": true
+  },
+
+  // Bluetooth
   "bluetooth": {
     "format": "",
-    "format-disabled": "󰂲", // 蓝牙关闭
-    "format-connected": " {device_alias}", // 蓝牙已连接
+    "format-disabled": "󰂲",
+    "format-connected": " {device_alias}",
     "format-connected-battery": " {device_alias} {device_battery_percentage}%",
     "tooltip-format": " {controller_alias}\t{status}",
     "tooltip-format-connected": " {controller_alias}\t{status}\n{device_enumerate}",
     "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
-    "on-click": "blueman-manager", // 点击打开蓝牙管理器
-    "on-click-right": "bluetoothctl power toggle" // 右键切换蓝牙开关
-  },
+    "on-click": "blueman-manager",
+    "on-click-right": "bluetoothctl power toggle"
+  }
 }
 
 

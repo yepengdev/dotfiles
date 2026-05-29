@@ -16,7 +16,7 @@ xset r rate 200 40
 
 xcompmgr& 
 
-xwallpaper --zoom ~/Pictures/dinosaur-kid-night-travel-discover-moon-silhouette-3500x3000-1057.jpg &
+xwallpaper --zoom ~/Pictures/wallpapers/wallhaven-po9eop.jpg &
 
 # export http_proxy=http://127.0.0.1:7890
 # export https_proxy=http://127.0.0.1:7890

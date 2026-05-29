@@ -1,70 +1,79 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
-(package! eaf
-  :recipe (:host github :repo "emacs-eaf/emacs-application-framework"
-           :files ("*")
-           :post-build (progn
-                         (async-shell-command "python install-eaf.py"))))
 
-(package! calctex :recipe (:host github :repo "johnbcoughlin/calctex"
-                           :files ("*.el" "calctex/*.el" "calctex-contrib/*.el" "org-calctex/*.el" "vendor")))
+;; To install a package:
+;;
+;;   1. Declare them here in a `package!' statement,
+;;   2. Run 'doom sync' in the shell,
+;;   3. Restart Emacs.
+;;
+;; Use 'C-h f package\!' to look up documentation for the `package!' macro.
 
-(package! org-transclusion :recipe (:host github :repo "nobiot/org-transclusion"))
-(package! org-pandoc-import
-  :recipe (:host github
-           :repo "tecosaur/org-pandoc-import"
-           :files ("*.el" "filters" "preprocessors")))
 
-(package! org-modern)
+;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
+;; (package! some-package)
 
-(package! nano-theme
-  :recipe (:host github
-           :repo "rougier/nano-theme"))
-(package! nano-modeline)
-(package! nano-vertico
-  :recipe (:host github
-           :repo "rougier/nano-vertico"))
+;; To install a package directly from a remote git repo, you must specify a
+;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
+;; https://github.com/radian-software/straight.el#the-recipe-format
+;; (package! another-package
+;;   :recipe (:host github :repo "username/repo"))
 
-(package! solo-jazz-theme)
+;; If the package you are trying to install does not contain a PACKAGENAME.el
+;; file, or is located in a subdirectory of the repo, you'll need to specify
+;; `:files' in the `:recipe':
+;; (package! this-package
+;;   :recipe (:host github :repo "username/repo"
+;;            :files ("some-file.el" "src/lisp/*.el")))
 
-(package! catppuccin-theme)
-(package! kaolin-themes)
+;; If you'd like to disable a package included with Doom, you can do so here
+;; with the `:disable' property:
+;; (package! builtin-package :disable t)
 
-(package! pyim)
-(package! pyim-basedict)
+;; You can override the recipe of a built in package without having to specify
+;; all the properties for `:recipe'. These will inherit the rest of its recipe
+;; from Doom or MELPA/ELPA/Emacsmirror:
+;; (package! builtin-package :recipe (:nonrecursive t))
+;; (package! builtin-package-2 :recipe (:repo "myfork/package"))
 
-(package! github-theme)
-(package! xclip)
+;; Specify a `:branch' to install a package from a particular branch or tag.
+;; This is required for some packages whose default branch isn't 'master' (which
+;; our package manager can't deal with; see radian-software/straight.el#279)
+;; (package! builtin-package :recipe (:branch "develop"))
 
-(package! image-roll :recipe
-  (:host github
-   :repo "dalanicolai/image-roll.el"))
+;; Use `:pin' to specify a particular commit to install.
+;; (package! builtin-package :pin "1a2b3c4d5e")
 
-(package! ob-mathematica)
-(package! wolfram-mode)
 
-(unpin! pdf-tools)
-(package! pdf-tools :recipe (:host github :repo "vedang/pdf-tools"))
+;; Doom's packages are pinned to a specific commit and updated from release to
+;; release. The `unpin!' macro allows you to unpin single packages...
+;; (unpin! pinned-package)
+;; ...or multiple packages
+;; (unpin! pinned-package another-pinned-package)
+;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
+;; (unpin! t)
+(package! fcitx)
+(package! spacious-padding)       ; 增加内边距，让界面更透气
 
-(package! org-ql
-  :recipe (:host github :repo "alphapapa/org-ql"
-           :files  (:defaults (:exclude "helm-org-ql.el"))))
-(package! org-contrib :recipe (:host github :repo "emacsmirror/org-contrib"))
-(package! draft-mode)
-(package! empv :recipe (:host github :repo "isamert/empv.el"))
-(package! eat)
-(package! wc-mode :recipe (:host github :repo "bnbeckwith/wc-mode"))
-(package! gemini-cli :recipe (:host github :repo "linchen2chris/gemini-cli.el"))
-
-(package! rainbow-delimiters)
-(package! org-download)
-(package! org-fragtog)
 (package! denote)
-(package! alert)
-(package! ef-themes)
+(package! denote-org)
+;; (package! citar)
+;; (package! citar-denote)
+;; 可选扩展
+(package! denote-sequence)        ; 序列笔记
+(package! denote-explore)         ; 可视化笔记网络
+(package! nov)                    ; 阅读 epub
 
-(package! dslide :recipe (:host github :repo "positron-solutions/dslide"))
-(unpin! org-roam)
-(package! org-roam-ui)
+;;(package! org-fragtog)
 
-(package! websocket)
+(package! consult-notes)
+
+(package! super-save)
+(package! benchmark-init)
+(package! ace-pinyin)
+(package! evil-pinyin)
+
+;;; default defer
+;; (package! flycheck-package :defer t)
+;; (package! expand-region :defer t)
+;; (package! embrace :defer t)
