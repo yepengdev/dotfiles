@@ -1,0 +1,48 @@
+#+TITLE: dotfiles
+#+SUBTITLE: managed with chezmoi
+
+** 安装
+
+#+begin_src sh
+  chezmoi init --apply git@github.com:yepengdev/dotfiles.git
+#+end_src
+
+** 更新
+
+#+begin_src sh
+  chezmoi diff   # 查看差异
+  chezmoi apply  # 应用变更
+#+end_src
+
+** 仓库结构说明
+
+chezmoi 在 source 目录使用带前缀的文件名（~/.local/share/chezmoi/）：
+
+| 前缀              | 含义          | 示例                       |
+|-------------------+--------------+---------------------------|
+| dot_              | 点文件前缀     | dot_bashrc → ~/.bashrc     |
+| executable_dot_   | 可执行点文件   | executable_dot_xinitrc     |
+| dot_config/       | ~/.config/ 下 | dot_config/fish/config.fish |
+| readonly_         | 只读属性       | (插件文件)                  |
+
+** 已管理配置
+
+- bash（.bashrc、.profile、.xinitrc、.xprofile）
+- Xresources
+- QtProject.conf
+- electron-flags.conf
+- fish（config.fish、conf.d/*、functions/*）
+- foot（foot.ini、themes.sh）
+- fuzzel（fuzzel.ini）
+- hypr（hyprland 全套配置）
+- niri（config.kdl、cfg/*）
+- swaylock（config）
+- waybar（config、style.css、net-speed.sh）
+- yazi（yazi.toml、init.lua、plugins/*）
+- zathura（zathurarc）
+- doom emacs（config.el、init.el、packages.el）
+
+** 注意
+
+- fish、niri、doom 有自己的 git 仓库（~/.config/{fish,niri,doom}/.git），chezmoi 不管理这些 .git 目录
+- 插件/自动生成文件（fisher plugins、tide 等）通过 .chezmoiignore 排除
