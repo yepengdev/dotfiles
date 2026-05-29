@@ -1,0 +1,14 @@
+if test -d ~/.local/bin
+    set -gx PATH $PATH ~/.local/bin/**/
+end
+
+fish_add_path ~/.local/bin
+fish_add_path ~/.local/bin/statusbar
+fish_add_path ~/.cargo/bin
+fish_add_path ~/Applications/depot_tools
+fish_add_path ~/.config/emacs/bin
+fish_add_path /usr/local/sbin
+fish_add_path /opt/bin
+fish_add_path /usr/lib/llvm/21/bin
+fish_add_path /usr/lib/llvm/20/bin
+fish_add_path $__npm_prefix/bin
