@@ -1,0 +1,41 @@
+# Fish auto-generated variables
+fish_variables
+fish_variables?*
+private_fish_variables
+
+# Chezmoi
+.chezmoiignore
+
+# Editor
+.cursor/
+
+# Plugin-managed completions
+completions/
+
+# Plugin-managed conf.d (keep only user's own)
+conf.d/_tide_init.fish
+conf.d/done.fish
+conf.d/plugin-sudope.fish
+conf.d/z.fish
+
+# Plugin-managed functions
+functions/__*.fish
+functions/__*.py
+functions/_tide_*.fish
+functions/tide/
+functions/backup.fish
+functions/bass.fish
+functions/copy.fish
+functions/extract.fish
+functions/fisher.fish
+functions/history.fish
+functions/sudope.fish
+functions/tide.fish
+functions/fish_mode_prompt.fish
+functions/fish_prompt.fish
+
+# Plugin themes
+themes/
+
+# Docs
+REASONIX.md
