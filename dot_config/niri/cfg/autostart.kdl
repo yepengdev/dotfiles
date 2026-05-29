@@ -1,0 +1,22 @@
+// ────────────── Startup Applications ──────────────
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Miscellaneous#spawn-sh-at-startup
+//spawn-at-startup "mako"
+// 启动网络管理器托盘图标 (nm-applet)
+// --indicator 参数用于在系统托盘显示网络连接状态
+spawn-at-startup "nm-applet --indicator"
+spawn-sh-at-startup "fcitx5"
+//  spawn-at-startup "~/v2rayN/v2rayN"
+spawn-at-startup "/usr/local/bin/niri-sidebar" "listen"
+//spawn-sh-at-startup "/usr/lib/polkit-kde-authentication-agent-1 &" // Polkit
+spawn-at-startup "dbus-update-activation-environment" "--all"
+spawn-sh-at-startup "qs -c noctalia-shell"
+// spawn-sh-at-startup "/home/peng/clash/cfw"
+spawn-at-startup "/usr/libexec/polkit-mate-authentication-agent-1"
+
+// 重启/强制启动 xdg-desktop-portal
+// 这是 Wayland 下实现屏幕共享、文件选择器等跨应用功能的桥梁
+// -r 参数表示重置/替换现有的 portal 实例
+spawn-at-startup "/usr/libexec/xdg-desktop-portal" "-r"
+spawn-at-startup "/usr/bin/emacs" "--daemon"
+
+

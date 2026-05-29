@@ -1,0 +1,55 @@
+prefer-no-csd
+screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+
+environment {
+    ELECTRON_OZONE_PLATFORM_HINT "auto"
+    QT_WAYLAND_DISABLE_WINDOWDECORATION "1"
+    XDG_SESSION_TYPE "wayland"
+    XDG_CURRENT_DESKTOP "niri"
+    XDG_SESSION_DESKTOP "niri"
+
+    LANG "zh_CN.UTF-8"
+    LC_CTYPE "zh_CN.UTF-8"
+
+    GTK_IM_MODULE "fcitx"       // 让 GTK 应用使用 Fcitx5
+    XMODIFIERS "@im=fcitx"
+    QT_IM_MODULE "fcitx"        // 让 Qt 应用使用 Fcitx5
+    SDL_IM_MODULE "fcitx"       // 让基于 SDL 的游戏或应用支持输入
+    GLFW_IM_MODULE "ibus"       // 修复 Kitty/Alacritty 等终端无法呼出输入法的问题
+
+    GDK_BACKEND "wayland"
+    // QT_QPA_PLATFORMTHEME "gtk3"
+    QT_QPA_PLATFORMTHEME "qt6ct"
+    // QT_QPA_PLATFORM "wayland"
+    QT_QPA_PLATFORM "wayland;xcb"
+    SDL_VIDEODRIVER "wayland,x11"
+    CLUTTER_BACKEND "wayland"
+
+    QT_AUTO_SCREEN_SCALE_FACTOR "1"
+    MOZ_ENABLE_WAYLAND "1"
+    _JAVA_AWT_WM_NONREPARENTING "1"
+}
+
+cursor {
+    xcursor-theme "Bibata-Modern-Classic"
+    xcursor-size 24
+
+    hide-when-typing
+    //hide-after-inactive-ms 1000
+}
+
+debug {
+    // Allows notification actions and window activation from Noctalia.
+    honor-xdg-activation-with-invalid-serial
+}
+
+hotkey-overlay {
+   skip-at-startup
+}
+
+blur {
+    passes 3
+    offset 3.0
+    noise 0.02
+    saturation 1.2
+}
