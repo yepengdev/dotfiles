@@ -1,0 +1,13 @@
+sys-libs/zlib minizip
+# required by dev-libs/libxml2-2.15.1::gentoo[icu]
+# required by app-arch/libarchive-3.8.5::gentoo[-expat]
+# required by kde-frameworks/extra-cmake-modules-6.22.0::gentoo
+# required by kde-frameworks/kwidgetsaddons-6.22.0::gentoo
+# required by app-i18n/fcitx-configtool-5.1.12::gentoo
+# required by @selected
+# required by @world (argument)
+>=dev-libs/icu-78.1 abi_x86_32
+# required by dev-libs/libxml2-2.15.1::gentoo
+# required by dev-libs/libical-3.0.20-r2::gentoo
+# required by @__auto_slot_operator_replace_installed__ (argument)
+=dev-libs/icu-77.1 abi_x86_32

@@ -1,0 +1,3 @@
+app-dicts/fcitx-pinyin-sougou-baidu +rime
+app-i18n/fcitx presage
+app-i18n/librime-lua lua_single_target_lua5-4 -lua_single_target_lua5-1

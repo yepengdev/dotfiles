@@ -1,0 +1,7 @@
+app-vim/nerdtree
+app-vim/lightline
+app-vim/surround
+app-vim/vim-commentary
+app-vim/vim-autoclose
+app-vim/rainbow
+app-vim/ctrlp

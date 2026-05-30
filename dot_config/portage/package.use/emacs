@@ -1,0 +1,1 @@
+app-editors/emacs gui gtk -X jpeg png svg webp tree-sitter dynamic-loading libxml2 -harfbuzz -imagemagick sqlite -Xaw3d -athena -motif gzip-el mailutils acl xattr

@@ -1,0 +1,5 @@
+dev-qt/qtwebengine makeopts-jobs-2.conf
+net-libs/webkit-gtk makeopts-jobs-2.conf
+net-libs/nodejs makeopts-jobs-2.conf
+www-client/chromium makeopts-jobs-2.conf
+dev-lang/rust makeopts-jobs-2.conf

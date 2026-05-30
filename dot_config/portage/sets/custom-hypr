@@ -1,0 +1,35 @@
+# gui-wm/hyprland
+# gui-libs/hyprland-qtutils
+gui-apps/waybar
+# gui-apps/hypridle
+gui-apps/foot
+gui-apps/fuzzel
+#gui-apps/walker
+app-misc/yazi
+app-misc/dragon
+#gui-apps/swaybg
+# move gui-apps/swww gui-apps/awww
+gui-apps/awww
+media-gfx/loupe
+gui-apps/mako
+gui-apps/wl-clipboard
+app-misc/cliphist
+gui-apps/slurp
+gui-apps/swaylock
+media-video/mpv
+sys-power/acpi                 # 电池状态
+sys-power/tlp                  # 电源管理（笔记本）
+net-misc/networkmanager        # 网络管理
+sys-auth/polkit                # 权限管理
+# app-laptop/laptop-mode-tools
+app-misc/brightnessctl
+# gui-apps/hyprshot
+media-sound/playerctl
+# sys-auth/hyprpolkitagent
+gui-apps/xwayland-satellite
+# gui-apps/hyprlock
+# gui-libs/xdg-desktop-portal-hyprland
+# #gui-apps/hyprland-addons
+# gui-apps/hyprpaper
+#gui-apps/hyprpicker
+#gui-wm/hyprland-contrib

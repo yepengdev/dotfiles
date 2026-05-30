@@ -1,0 +1,64 @@
+# created by eselect-repo
+
+[guru]
+location = /var/db/repos/guru
+sync-type = git
+sync-uri = https://gh-proxy.org/github.com/gentoo-mirror/guru.git
+
+[gentoo-zh]
+location = /var/db/repos/gentoo-zh
+sync-type = git
+sync-uri = https://gh-proxy.org/github.com/microcai/gentoo-zh.git
+
+
+[edgets]
+location = /var/db/repos/edgets
+sync-type = git
+sync-uri = https://gh-proxy.org/https://github.com/BlueManCZ/edgets.git
+
+[kzd]
+location = /var/db/repos/kzd
+sync-type = git
+sync-uri = https://gitlab.com/kzdixon/kzd-ebuilds.git
+
+[steam-overlay]
+location = /var/db/repos/steam-overlay
+sync-type = git
+sync-uri = https://gh-proxy.org/https://github.com/anyc/steam-overlay.git
+
+[melpa]
+location = /var/db/repos/melpa
+sync-type = git
+sync-uri = https://gh-proxy.org/https://github.com/houseofsuns/melpa.git
+
+[gnu-elpa]
+location = /var/db/repos/gnu-elpa
+sync-type = git
+sync-uri = https://gh-proxy.org/https://github.com/houseofsuns/gnu-elpa.git
+
+[gentouranos]
+location = /var/db/repos/gentouranos
+sync-type = git
+sync-uri = https://gh-proxy.org/https://github.com/OuraN2O/gentouranos.git
+
+[another-brave-overlay]
+location = /var/db/repos/another-brave-overlay
+sync-type = git
+sync-uri = https://gh-proxy.org/https://github.com/falbrechtskirchinger/another-brave-overlay.git
+
+
+[arrans-overlay]
+location = /var/db/repos/arrans-overlay
+sync-type = git
+sync-uri = https://github.com/arran4/arrans_overlay.git
+
+
+[hyproverlay]
+location = /var/db/repos/hyproverlay
+sync-type = git
+sync-uri = https://codeberg.org/hyproverlay/hyproverlay.git
+
+[jaredallard]
+location = /var/db/repos/jaredallard
+sync-type = git
+sync-uri = https://git.rgst.io/jaredallard/overlay.git

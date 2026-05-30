@@ -1,0 +1,18 @@
+#!/bin/bash
+# Deploy portage configs to /etc/portage/ on first chezmoi apply
+# Uses chezmoi-managed copies from ~/.config/portage/
+
+set -euo pipefail
+
+PORTAGE_SRC="{{ .chezmoi_source_dir }}/dot_config/portage"
+PORTAGE_DST="/etc/portage"
+
+if [ ! -d "$PORTAGE_SRC" ]; then
+    echo "Portage source not found: $PORTAGE_SRC"
+    exit 1
+fi
+
+echo "Deploying portage configs to $PORTAGE_DST..."
+sudo cp -arf "$PORTAGE_SRC/"* "$PORTAGE_DST/"
+
+echo "Done. Run 'sudo emerge --sync' if repos changed."

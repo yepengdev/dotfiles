@@ -1,0 +1,9 @@
+app-emacs/ebuild-mode
+app-emacs/ebuild-run-mode
+
+# 在package.accept_keywords中（如果需要）
+# app-emacs/org-roam        # 笔记互联
+app-emacs/olivetti        # 专注写作模式
+app-emacs/visual-fill-column  # 自动换行
+app-emacs/poet-theme      # 写作友好主题
+app-emacs/org-ql

@@ -1,0 +1,2 @@
+# see https://wiki.archlinux.org/title/TrackPoint
+x11-drivers/xf86-input-evdev
