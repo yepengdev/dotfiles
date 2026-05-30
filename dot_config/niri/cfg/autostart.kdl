@@ -1,22 +1,31 @@
 // ────────────── Startup Applications ──────────────
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Miscellaneous#spawn-sh-at-startup
-//spawn-at-startup "mako"
-// 启动网络管理器托盘图标 (nm-applet)
-// --indicator 参数用于在系统托盘显示网络连接状态
-spawn-at-startup "nm-applet --indicator"
-spawn-sh-at-startup "fcitx5"
-//  spawn-at-startup "~/v2rayN/v2rayN"
+// `spawn-at-startup` for direct executables, `spawn-sh-at-startup` for shell pipelines.
+
+// System tray: network manager indicator
+spawn-at-startup "nm-applet" "--indicator"
+
+// Input method framework (Fcitx5)
+spawn-at-startup "fcitx5"
+
+// Sidebar (window switcher / workspace overview)
 spawn-at-startup "/usr/local/bin/niri-sidebar" "listen"
-//spawn-sh-at-startup "/usr/lib/polkit-kde-authentication-agent-1 &" // Polkit
+
+// Refresh D-Bus activation environment for child processes
 spawn-at-startup "dbus-update-activation-environment" "--all"
+
+// Noctalia shell (wallpaper, launcher, lock screen, settings)
 spawn-sh-at-startup "qs -c noctalia-shell"
-// spawn-sh-at-startup "/home/peng/clash/cfw"
+
+// Polkit authentication agent (privilege escalation UI)
 spawn-at-startup "/usr/libexec/polkit-mate-authentication-agent-1"
 
-// 重启/强制启动 xdg-desktop-portal
-// 这是 Wayland 下实现屏幕共享、文件选择器等跨应用功能的桥梁
-// -r 参数表示重置/替换现有的 portal 实例
+// xdg-desktop-portal (Wayland screen sharing, file picker, etc.)
+// -r flag replaces any running instance
 spawn-at-startup "/usr/libexec/xdg-desktop-portal" "-r"
+
+// Emacs daemon (background server for emacsclient)
 spawn-at-startup "/usr/bin/emacs" "--daemon"
 
-
+// Niri initialization helper (custom script)
+spawn-at-startup "nirinit"

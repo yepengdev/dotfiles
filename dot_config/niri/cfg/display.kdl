@@ -1,9 +1,15 @@
-// ────────────── Output Configuration ──────────────
-// You can run `niri msg outputs` to get the correct name for your displays.
-// You will have to remove "/-" and edit it before it takes effect.
+// ────────────── Output (Monitor) Configuration ──────────────
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Outputs
-
-/- output "DP-1" {
-    mode "2560x1440@359.979" // Set resolution and refresh rate
-    scale 1 // No scaling (use 2 for HiDPI)
-}
+//
+// This file is a per-machine placeholder.
+// Run `niri msg outputs` to list your displays, then uncomment
+// and rename the output blocks below for your specific setup.
+//
+// Example:
+//   output "eDP-1" { scale 1.5; }
+//   output "DP-3" { mode 2560x1440@144; position x=0 y=0; }
+//
+// Use /- to uncomment a block:
+// /-output "eDP-1" {
+// /-    scale 1.5
+// /-}

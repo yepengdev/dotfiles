@@ -3,21 +3,22 @@ binds {
     // ────────────── Keybindings ──────────────
     // https://github.com/YaLTeR/niri/wiki/Configuration:-Key-Bindings
 
-    // ─── noctalia-shell keybinds ───
-    // https://docs.noctalia.dev/getting-started/keybinds/
-
+    // ─── Hotkey Overlay ───
     MOD+SHIFT+ESCAPE                     { show-hotkey-overlay; }
+
     // ─── Applications ───
-    MOD+RETURN                          hotkey-overlay-title="Open Terminal: foot" { spawn "foot"; }
-    MOD+SHIFT+RETURN                   hotkey-overlay-title="Open Terminal: kitty" { spawn "kitty"; }
-    MOD+SPACE                           hotkey-overlay-title="Open App Launcher: noctalia launcher" { spawn-sh "qs -c noctalia-shell ipc call launcher toggle"; }
-    MOD+B                               hotkey-overlay-title="Open Browser: Brave Browser" { spawn-sh "flatpak run com.brave.Browser"; }
-    MOD+ALT+L                           hotkey-overlay-title="Lock Screen: noctalia lock" { spawn-sh "qs -c noctalia-shell ipc call lockScreen lock"; }
+    MOD+RETURN                          hotkey-overlay-title="Open Terminal: foot (default)" { spawn "foot"; }
+    MOD+SHIFT+RETURN                    hotkey-overlay-title="Open Terminal: kitty (alt)" { spawn "kitty"; }
+    MOD+SPACE                           hotkey-overlay-title="Open App Launcher" { spawn-sh "qs -c noctalia-shell ipc call launcher toggle"; }
+    MOD+B                               hotkey-overlay-title="Open Browser: Brave" { spawn "brave-browser-stable"; }
+    MOD+ALT+L                           hotkey-overlay-title="Lock Screen" { spawn-sh "qs -c noctalia-shell ipc call lockScreen lock"; }
 
-    Mod+R { switch-preset-column-width; }
+    // Preset column width cycle (see layout.kdl for proportions)
+    MOD+R                               hotkey-overlay-title="Next preset column width" { switch-preset-column-width; }
+    MOD+SHIFT+R                         hotkey-overlay-title="Previous preset column width" { switch-preset-column-width-back; }
+    MOD+SHIFT+CTRL+R                    hotkey-overlay-title="Next preset window height" { switch-preset-window-height; }
 
-    // Please choose your own file manager.
-    MOD+E                               hotkey-overlay-title="File Manager: Nautilus" { spawn-sh "foot -e yazi"; }
+    MOD+E                               hotkey-overlay-title="File Manager" { spawn-sh "foot -e yazi"; }
 
     // ─── Audio Controls ───
     XF86AUDIORAISEVOLUME                allow-when-locked=true { spawn-sh "qs -c noctalia-shell ipc call volume increase"; }
@@ -25,29 +26,23 @@ binds {
     XF86AUDIOMUTE                       allow-when-locked=true { spawn-sh "qs -c noctalia-shell ipc call volume muteOutput"; }
     XF86AUDIOMICMUTE                    allow-when-locked=true { spawn-sh "qs -c noctalia-shell ipc call volume muteInput"; }
 
-    // brightness control
+    // ─── Brightness ───
     XF86MONBRIGHTNESSUP                 allow-when-locked=true { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "increase"; }
     XF86MonBrightnessDown               allow-when-locked=true { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "decrease"; }
 
     MOD+V                               hotkey-overlay-title="Open Clipboard History" { spawn-sh "qs -c noctalia-shell ipc call launcher clipboard"; }
 
+    // ─── niri-sidebar (window/workspace switcher panel) ───
+    MOD+S                               hotkey-overlay-title="Toggle sidebar window" { spawn-sh "/usr/local/bin/niri-sidebar toggle-window"; }
+    MOD+SHIFT+S                         hotkey-overlay-title="Toggle sidebar visibility" { spawn-sh "/usr/local/bin/niri-sidebar toggle-visibility"; }
+    MOD+CTRL+S                          hotkey-overlay-title="Flip sidebar order" { spawn-sh "/usr/local/bin/niri-sidebar flip"; }
+    MOD+ALT+R                           hotkey-overlay-title="Reorder sidebar" { spawn-sh "/usr/local/bin/niri-sidebar reorder"; }
+
+    // ─── Noctalia Settings ───
+    MOD+I                               hotkey-overlay-title="Open Noctalia Settings" { spawn-sh "qs -c noctalia-shell ipc call settings toggle"; }
 
     // ─── Window Movement and Focus ───
     MOD+Q                               { close-window; }
-
-    MOD+S                               {spawn-sh "/usr/local/bin/niri-sidebar toggle-window";}
-
-    // Toggle sidebar visibility (hide/show)
-    Mod+Shift+S                         {spawn-sh "/usr/local/bin/niri-sidebar toggle-visibility"; }
-
-    // Flip the order of the sidebar
-    Mod+Ctrl+S                          {spawn-sh "/usr/local/bin/niri-sidebar flip"; }
-
-    // Force reorder (useful if something gets misaligned manually)
-    Mod+Alt+R                           {spawn-sh "/usr/local/bin/niri-sidebar reorder"; }
-
-    // quickshell keybindings
-    Mod+I                               hotkey-overlay-title="Open quickshell setting" { spawn-sh "qs -c noctalia-shell ipc call settings toggle"; }
 
     MOD+LEFT                            { focus-column-left; }
     MOD+H                               { focus-column-left; }
@@ -58,14 +53,16 @@ binds {
     MOD+DOWN                            { focus-window-down; }
     MOD+J                               { focus-window-down; }
 
-    MOD+CTRL+LEFT                       { move-column-left; }
-    MOD+CTRL+H                          { move-column-left; }
-    MOD+CTRL+RIGHT                      { move-column-right; }
-    MOD+CTRL+L                          { move-column-right; }
-    MOD+CTRL+UP                         { move-window-up; }
-    MOD+CTRL+K                          { move-window-up; }
-    MOD+CTRL+DOWN                       { move-window-down; }
-    MOD+CTRL+J                          { move-window-down; }
+    // Move workspace (in overview) / move column (normal)
+    MOD+CTRL+LEFT                       { spawn-sh "bash /home/peng/.config/niri/scripts/niri_overview_bind.sh move-workspace-left move-column-left"; }
+    MOD+CTRL+H                          { spawn-sh "bash /home/peng/.config/niri/scripts/niri_overview_bind.sh move-workspace-left move-column-left"; }
+    MOD+CTRL+RIGHT                      { spawn-sh "bash /home/peng/.config/niri/scripts/niri_overview_bind.sh move-workspace-right move-column-right"; }
+    MOD+CTRL+L                          { spawn-sh "bash /home/peng/.config/niri/scripts/niri_overview_bind.sh move-workspace-right move-column-right"; }
+    // Move workspace (in overview) / move window (normal)
+    MOD+CTRL+UP                         { spawn-sh "bash /home/peng/.config/niri/scripts/niri_overview_bind.sh move-workspace-up move-window-up"; }
+    MOD+CTRL+K                          { spawn-sh "bash /home/peng/.config/niri/scripts/niri_overview_bind.sh move-workspace-up move-window-up"; }
+    MOD+CTRL+DOWN                       { spawn-sh "bash /home/peng/.config/niri/scripts/niri_overview_bind.sh move-workspace-down move-window-down"; }
+    MOD+CTRL+J                          { spawn-sh "bash /home/peng/.config/niri/scripts/niri_overview_bind.sh move-workspace-down move-window-down"; }
 
     MOD+HOME                            { focus-column-first; }
     MOD+END                             { focus-column-last; }
@@ -82,9 +79,10 @@ binds {
     MOD+SHIFT+CTRL+UP                   { move-column-to-monitor-up; }
     MOD+SHIFT+CTRL+DOWN                 { move-column-to-monitor-down; }
 
-    // ─── Workspace Switching ───
-    MOD+WHEELSCROLLDOWN                 cooldown-ms=150 { focus-workspace-down; }
-    MOD+WHEELSCROLLUP                   cooldown-ms=150 { focus-workspace-up; }
+    // ─── Workspace Switching (via niri_workspace_helper) ───
+    // Skip empty workspaces (-s) and wrap around (-w)
+    MOD+WHEELSCROLLDOWN                 cooldown-ms=150 { spawn "python3" "/home/peng/.config/niri/scripts/niri_workspace_helper.py" "down" "-s" "-w"; }
+    MOD+WHEELSCROLLUP                   cooldown-ms=150 { spawn "python3" "/home/peng/.config/niri/scripts/niri_workspace_helper.py" "up" "-s" "-w"; }
     MOD+CTRL+WHEELSCROLLDOWN            cooldown-ms=150 { move-column-to-workspace-down; }
     MOD+CTRL+WHEELSCROLLUP              cooldown-ms=150 { move-column-to-workspace-up; }
 
@@ -98,15 +96,16 @@ binds {
     MOD+CTRL+SHIFT+WHEELSCROLLDOWN      { move-column-right; }
     MOD+CTRL+SHIFT+WHEELSCROLLUP        { move-column-left; }
 
-    MOD+1                               { focus-workspace 1; }
-    MOD+2                               { focus-workspace 2; }
-    MOD+3                               { focus-workspace 3; }
-    MOD+4                               { focus-workspace 4; }
-    MOD+5                               { focus-workspace 5; }
-    MOD+6                               { focus-workspace 6; }
-    MOD+7                               { focus-workspace 7; }
-    MOD+8                               { focus-workspace 8; }
-    MOD+9                               { focus-workspace 9; }
+    // Re-selecting the active workspace toggles overview (via niri_workspace_helper)
+    MOD+1                               { spawn "python3" "/home/peng/.config/niri/scripts/niri_workspace_helper.py" "1"; }
+    MOD+2                               { spawn "python3" "/home/peng/.config/niri/scripts/niri_workspace_helper.py" "2"; }
+    MOD+3                               { spawn "python3" "/home/peng/.config/niri/scripts/niri_workspace_helper.py" "3"; }
+    MOD+4                               { spawn "python3" "/home/peng/.config/niri/scripts/niri_workspace_helper.py" "4"; }
+    MOD+5                               { spawn "python3" "/home/peng/.config/niri/scripts/niri_workspace_helper.py" "5"; }
+    MOD+6                               { spawn "python3" "/home/peng/.config/niri/scripts/niri_workspace_helper.py" "6"; }
+    MOD+7                               { spawn "python3" "/home/peng/.config/niri/scripts/niri_workspace_helper.py" "7"; }
+    MOD+8                               { spawn "python3" "/home/peng/.config/niri/scripts/niri_workspace_helper.py" "8"; }
+    MOD+9                               { spawn "python3" "/home/peng/.config/niri/scripts/niri_workspace_helper.py" "9"; }
 
     MOD+CTRL+1                          { move-column-to-workspace 1; }
     MOD+CTRL+2                          { move-column-to-workspace 2; }
@@ -118,7 +117,9 @@ binds {
     MOD+CTRL+8                          { move-column-to-workspace 8; }
     MOD+CTRL+9                          { move-column-to-workspace 9; }
 
-    MOD+TAB                             { focus-workspace-previous; }
+    // consume-or-expel: merge window into column or split it out
+    MOD+Comma                           { consume-or-expel-window-left; }
+    MOD+Period                          { consume-or-expel-window-right; }
 
     // ─── Layout Controls ───
     MOD+CTRL+F                          { expand-column-to-available-width; }
@@ -135,17 +136,18 @@ binds {
     MOD+W                               { toggle-column-tabbed-display; }
 
     // ─── Screenshots ───
-    CTRL+SHIFT+1                        { screenshot; }
-    CTRL+SHIFT+2                        { screenshot-screen; }
-    CTRL+SHIFT+3                        { screenshot-window; }
+    CTRL+SHIFT+1                        { screenshot; }          // Select area, save to ~/Pictures/Screenshots
+    CTRL+SHIFT+2                        { screenshot-screen; }   // Entire current monitor
+    CTRL+SHIFT+3                        { screenshot-window; }   // Focused window only
 
-    // ─── Emergency Escape Key ───
-    // Use this when a fullscreen app blocks your keybinds.
-    // It disables any active keyboard shortcut inhibitor, restoring control.
+    // ─── Emergency Escape ───
+    // Override keyboard shortcut inhibitor (use when a fullscreen app
+    // blocks your keybinds). allow-inhibiting=false ensures this works
+    // even when shortcuts are inhibited.
     MOD+ESCAPE                          allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
 
     // ─── Exit / Power ───
-    CTRL+ALT+DELETE                     { quit; } // Also quits Niri
-    MOD+SHIFT+P                         { power-off-monitors; } // Turn off screens (useful for OLED or privacy)
-    MOD+O                               repeat=false { toggle-overview; }
+    CTRL+ALT+DELETE                     { quit; }               // Quit niri (returns to DM / tty)
+    MOD+SHIFT+P                         { power-off-monitors; } // Blank monitors (OLED burn-in / privacy)
+    MOD+O                               repeat=false { toggle-overview; } // Workspace overview grid
 }

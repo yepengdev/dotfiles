@@ -1,55 +1,107 @@
+// ────────────── Miscellaneous Settings ──────────────
+
 prefer-no-csd
 screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 
+// ─── Environment Variables ───
 environment {
+    // Electron: let the compositor choose Wayland vs X11
     ELECTRON_OZONE_PLATFORM_HINT "auto"
+    // Qt: disable window decorations (handled by niri)
     QT_WAYLAND_DISABLE_WINDOWDECORATION "1"
+    // Session type hints
     XDG_SESSION_TYPE "wayland"
     XDG_CURRENT_DESKTOP "niri"
     XDG_SESSION_DESKTOP "niri"
 
+    // Locale
     LANG "zh_CN.UTF-8"
     LC_CTYPE "zh_CN.UTF-8"
 
-    GTK_IM_MODULE "fcitx"       // 让 GTK 应用使用 Fcitx5
-    XMODIFIERS "@im=fcitx"
-    QT_IM_MODULE "fcitx"        // 让 Qt 应用使用 Fcitx5
-    SDL_IM_MODULE "fcitx"       // 让基于 SDL 的游戏或应用支持输入
-    GLFW_IM_MODULE "ibus"       // 修复 Kitty/Alacritty 等终端无法呼出输入法的问题
+    // Input method (Fcitx5) integration
+    XMODIFIERS "@im=fcitx"      // XWayland apps
+    QT_IM_MODULE "fcitx"        // Qt apps
+    SDL_IM_MODULE "fcitx"       // SDL-based games/apps
+    GLFW_IM_MODULE "ibus"       // Kitty/Alacritty etc. (uses ibus protocol)
 
-    GDK_BACKEND "wayland"
-    // QT_QPA_PLATFORMTHEME "gtk3"
-    QT_QPA_PLATFORMTHEME "qt6ct"
-    // QT_QPA_PLATFORM "wayland"
-    QT_QPA_PLATFORM "wayland;xcb"
+    // Backend selection (Wayland preferred, X11 fallback)
+    GDK_BACKEND "wayland,x11"      // GTK apps
+    QT_QPA_PLATFORMTHEME "gtk3"    // Qt appearance: follow GTK theme
+    // Alternative Qt platform theme: // QT_QPA_PLATFORMTHEME "qt6ct"
+    QT_QPA_PLATFORM "wayland;xcb"  // Qt: Wayland first, X11 fallback
+    // Alternative Qt platform: // QT_QPA_PLATFORM "wayland"
     SDL_VIDEODRIVER "wayland,x11"
     CLUTTER_BACKEND "wayland"
 
     QT_AUTO_SCREEN_SCALE_FACTOR "1"
-    MOZ_ENABLE_WAYLAND "1"
-    _JAVA_AWT_WM_NONREPARENTING "1"
+    MOZ_ENABLE_WAYLAND "1"          // Firefox Wayland support
+    _JAVA_AWT_WM_NONREPARENTING "1" // Java apps on Wayland
 }
 
+// ─── Cursor ───
 cursor {
     xcursor-theme "Bibata-Modern-Classic"
     xcursor-size 24
 
     hide-when-typing
-    //hide-after-inactive-ms 1000
+    // Alternative: auto-hide after inactivity: // hide-after-inactive-ms 1000
 }
 
+// ─── Debug ───
 debug {
     // Allows notification actions and window activation from Noctalia.
     honor-xdg-activation-with-invalid-serial
 }
 
-hotkey-overlay {
-   skip-at-startup
+// ─── Overview (workspace grid) ───
+overview {
+    zoom 0.4
+    backdrop-color "#262626"
+    workspace-shadow {
+        softness 40
+        spread 10
+        offset x=0 y=10
+        color "#00000050"
+    }
 }
 
+// ─── Touch gestures ───
+gestures {
+    hot-corners {
+        top-left           // Move cursor to top-left corner to trigger overview
+    }
+}
+
+// ─── Recent Windows Switcher (Alt+Tab) ───
+recent-windows {
+    highlight {
+        corner-radius 14
+        padding 20
+    }
+    previews {
+        max-height 360
+    }
+    binds {
+        MOD+Tab         { next-window; }
+        MOD+SHIFT+Tab   { previous-window; }
+        MOD+grave       { next-window     filter="app-id"; }
+        MOD+SHIFT+grave { previous-window filter="app-id"; }
+    }
+}
+
+// ─── Hotkey Overlay (MOD+SHIFT+ESCAPE) ───
+hotkey-overlay {
+   skip-at-startup
+   hide-not-bound             // Only show binds that have hotkey-overlay-title
+}
+
+// ─── XWayland Satellite (X11 app compat) ───
+xwayland-satellite {}
+
+// ─── Window Blur ───
 blur {
     passes 3
     offset 3.0
-    noise 0.02
-    saturation 1.2
+    noise 0.05
+    saturation 1.5
 }

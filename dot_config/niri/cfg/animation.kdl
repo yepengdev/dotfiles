@@ -1,101 +1,18 @@
-// animations {
-//     workspace-switch {
-//         spring damping-ratio=1.0 stiffness=1000 epsilon=0.0001
-//     }
-//     window-open {
-//         duration-ms 200
-//         curve "ease-out-quad"
-//     }
-//     window-close {
-//         duration-ms 200
-//         curve "ease-out-cubic"
-//     }
-//     horizontal-view-movement {
-//         spring damping-ratio=1.0 stiffness=900 epsilon=0.0001
-//     }
-//     window-movement {
-//         spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
-//     }
-//     window-resize {
-//         spring damping-ratio=1.0 stiffness=1000 epsilon=0.0001
-//     }
-//     config-notification-open-close {
-//         spring damping-ratio=0.6 stiffness=1200 epsilon=0.001
-//     }
-//     screenshot-ui-open {
-//         duration-ms 300
-//         curve "ease-out-quad"
-//     }
-//     overview-open-close {
-//         spring damping-ratio=1.0 stiffness=900 epsilon=0.0001
-//     }
-
-//      workspace-switch {
-//          spring damping-ratio=0.7 stiffness=1200 epsilon=0.0001
-//      }
-
-//      // 窗口移动与缩放：平滑且灵动的回弹
-//      horizontal-view-movement {
-//          spring damping-ratio=0.8 stiffness=1000 epsilon=0.0001
-//      }
-//      window-movement {
-//          spring damping-ratio=0.8 stiffness=1000 epsilon=0.0001
-//      }
-//      window-resize {
-//          spring damping-ratio=0.8 stiffness=1000 epsilon=0.0001
-//      }
-
-//      // 窗口打开：圆环扩散效果
-//      window-open {
-//          duration-ms 300
-//          curve "ease-out-expo"
-//          custom-shader r"
-//              vec4 open_color(vec3 coords_geo, vec3 size_geo) {
-//                  float p = niri_clamped_progress;
-//                 vec2 coords = (coords_geo.xy - vec2(0.5, 0.5)) * size_geo.xy * 2.0;
-//                 coords = coords / length(size_geo.xy);
-//                 if (p * p <= dot(coords, coords))
-//                     return vec4(0.0);
-
-//                 vec3 coords_tex = niri_geo_to_tex * coords_geo;
-//                 vec4 color = texture2D(niri_tex, coords_tex.st);
-//                 return color * p;
-//             }
-//         "
-//     }
-
-//     // 窗口关闭：下坠并旋转消失
-//     window-close {
-//         duration-ms 400
-//         curve "linear"
-//         custom-shader r"
-//             vec4 close_color(vec3 coords_geo, vec3 size_geo) {
-//                 float progress = niri_clamped_progress * niri_clamped_progress;
-//                 vec2 coords = (coords_geo.xy - vec2(0.5, 1.0)) * size_geo.xy;
-//                 coords.y -= progress * 200.0;
-//                 float random = (niri_random_seed - 0.5) / 2.0;
-//                 random = sign(random) - random;
-//                 float max_angle = 0.05 * random;
-//                 float angle = progress * max_angle;
-//                 mat2 rotate = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
-//                 coords = rotate * coords;
-//                 coords_geo = vec3(coords / size_geo.xy + vec2(0.5, 1.0), 1.0);
-//                 vec3 coords_tex = niri_geo_to_tex * coords_geo;
-//                 vec4 color = texture2D(niri_tex, coords_tex.st);
-//                 return color * (1.0 - niri_clamped_progress);
-//             }
-//         "
-//     }
-// }
-
-
 animations {
+
+    // ═══════════════════════════════════════════════════════════════
+    // Workspace Switch: light bounce
     // 工作区切换：轻微回弹
+    // ═══════════════════════════════════════════════════════════════
     workspace-switch {
         spring damping-ratio=0.7 stiffness=1200 epsilon=0.0001
     }
 
+    // ═══════════════════════════════════════════════════════════════
+    // Horizontal View Movement, Window Movement & Resize:
+    // unified snappy bounce for all spatial transitions
     // 水平视图移动、窗口移动与缩放：统一灵动回弹
+    // ═══════════════════════════════════════════════════════════════
     horizontal-view-movement {
         spring damping-ratio=0.8 stiffness=1000 epsilon=0.0001
     }
@@ -106,9 +23,18 @@ animations {
         spring damping-ratio=0.8 stiffness=1000 epsilon=0.0001
     }
 
-    // 窗口打开：smoke
+    // ═══════════════════════════════════════════════════════════════
+    // Window Open: smoke reveal effect
+    // 窗口打开：烟雾粒子展开效果
+    //
+    // GLSL NOTE — The helper functions hash(), noise(), fbm(), and
+    // warpedFbm() below are DUPLICATED in the window-close shader.
+    // niri does NOT support GLSL #include or shared shader definitions
+    // (each custom-shader is an independent GLSL program).
+    // Keep the duplicates in sync when making changes.
+    // ═══════════════════════════════════════════════════════════════
     window-open {
-        duration-ms 400
+        duration-ms 1000
         curve "ease-out-cubic"
         custom-shader r"
             float hash(vec2 p) {
@@ -180,9 +106,15 @@ animations {
         "
     }
 
-    // 窗口关闭：smoke
+    // ═══════════════════════════════════════════════════════════════
+    // Window Close: smoke dissolve effect
+    // 窗口关闭：烟雾消散效果
+    //
+    // GLSL NOTE — hash(), noise(), fbm(), and warpedFbm() are
+    // duplicates of the window-open shader above. Keep in sync.
+    // ═══════════════════════════════════════════════════════════════
     window-close {
-        duration-ms 400
+        duration-ms 1000
         curve "ease-out-cubic"
         custom-shader r"
             float hash(vec2 p) {
@@ -255,19 +187,44 @@ animations {
         "
     }
 
-    // 配置通知：弹性较强
+    // ═══════════════════════════════════════════════════════════════
+    // Config Notification: bouncy alert
+    // 配置通知：弹性较强（提示配置更新成功）
+    // ═══════════════════════════════════════════════════════════════
     config-notification-open-close {
         spring damping-ratio=0.6 stiffness=1200 epsilon=0.001
     }
 
+    // ═══════════════════════════════════════════════════════════════
+    // Screenshot UI: fade in
     // 截图界面：淡入淡出风格
+    // ═══════════════════════════════════════════════════════════════
     screenshot-ui-open {
         duration-ms 300
         curve "ease-out-quad"
     }
 
+    // ═══════════════════════════════════════════════════════════════
+    // Overview (workspace grid): critically damped (no bounce)
     // 概览模式：临界阻尼（无回弹）
+    // ═══════════════════════════════════════════════════════════════
     overview-open-close {
         spring damping-ratio=1.0 stiffness=900 epsilon=0.0001
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Exit Confirmation Dialog: light bounce
+    // 退出确认弹窗：轻微弹性
+    // ═══════════════════════════════════════════════════════════════
+    exit-confirmation-open-close {
+        spring damping-ratio=0.6 stiffness=500 epsilon=0.01
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // Recent Windows Switcher Close: critically damped
+    // 最近窗口切换器关闭：临界阻尼
+    // ═══════════════════════════════════════════════════════════════
+    recent-windows-close {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.001
     }
 }

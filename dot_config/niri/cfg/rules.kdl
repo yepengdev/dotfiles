@@ -1,108 +1,65 @@
+// ────────────── Window & Layer Rules ──────────────
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Window-Rules
+
+// Default rule: no rounded corners, blur background
 window-rule {
-    geometry-corner-radius 6 // Set every window radius to N
+    geometry-corner-radius 0
     clip-to-geometry true
     background-effect {
         xray true
         blur true
         noise 0.05
-        saturation 3
+        saturation 1.5
     }
 }
 
-// 让顶部和覆盖层使用普通模糊
-layer-rule {
-    match layer="top"
-    match layer="overlay"
-}
-
+// Noctalia wallpaper: render behind all windows
 layer-rule {
     match namespace="^noctalia-wallpaper*"
     place-within-backdrop true
 }
 
-
+// Inactive windows: slightly dimmed
 window-rule {
-    match is-active=true
+    match is-active=false
     opacity 0.9
 }
 
+// Image viewer (Loupe): open floating by default
 window-rule {
-    match app-id="^org.gnome.Loupe*"
+    match app-id="^org.gnome.Loupe"
     open-floating true
-
-    background-effect {
-        blur true
-    }
-    popups {
-        geometry-corner-radius 15
-        opacity 0.5
-        background-effect {
-            blur true
-        }
-    }
 }
 
+// Emacs floating window (for transient popups)
 window-rule {
-    match app-id="^emacs*"
-    opacity 0.9
-}
-
-window-rule {
-    match title="^Picture-in-Picture$" // 比如 Chrome 的画中画
-    geometry-corner-radius 0
-    clip-to-geometry true
-
-}
-
-window-rule {
-    match app-id="^org.pwmt.zathura$" // 比如 Chrome 的画中画
-    geometry-corner-radius 0
-
-    opacity 0.9
-}
-
-window-rule {
-    // Match the temporary editing window by its class and title
     match app-id="emacs" title="emacs-float"
     open-floating true
 }
+
+// Emacs main window: workspace 3, maximized, blur background
 window-rule {
-    match app-id="^org.fcitx*"
-    draw-border-with-background false
+    match app-id="emacs"
+    open-on-workspace "3"     // Workspace layout: 1=term, 2=browser, 3=code
+    opacity 0.85
+    open-maximized true
+    background-effect {
+        xray true
+        blur true
+    }
+}
+
+// Zathura (PDF reader): no rounded corners
+window-rule {
+    match app-id="^org.pwmt.zathura$"
     geometry-corner-radius 0
     opacity 0.95
-    clip-to-geometry true
 }
+
+// Fcitx5 candidate window: no background border
+// 为 fcitx5 候选窗口设置规则
+// Without this, the IME popup draws an unwanted opaque border.
 window-rule {
-    match app-id="^Alacritty$"
-    default-column-width { proportion 0.7; }
-
-    background-effect {
-        blur true
-    }
-}
-
-window-rule {
-    match app-id="^foot$"
-    default-column-width { proportion 0.7; }
-}
-
-window-rule {
-    match app-id="^kitty$"
-    default-column-width { proportion 0.7; }
-}
-layer-rule {
-    match namespace="^launcher$"
-
-    background-effect {
-        blur true
-    }
-}
-// Set the overview wallpaper on the backdrop.
-layer-rule {
-  match namespace="^noctalia-overview*"
-  place-within-backdrop true
-  background-effect {
-    xray false
-  }
+    match app-id="fcitx5"
+    draw-border-with-background false
 }

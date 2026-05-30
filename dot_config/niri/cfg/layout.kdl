@@ -1,16 +1,27 @@
+// ────────────── Layout & Appearance ──────────────
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Layout
+
 layout {
-    gaps 16 // Gap between windows
-    center-focused-column "never" // Don’t auto-center focused column
+    gaps 16                       // px between windows / screen edges
+    center-focused-column "never" // Don't auto-center the active column
 
-    background-color "transparent" // <- needed for noctalia-shell to set wallpaper
+    background-color "transparent"
 
-    preset-column-widths {
+    default-column-width { proportion 0.5; }  // New windows open at half width
+
+    preset-column-widths {        // Cycle targets for MOD+R / MOD+SHIFT+R
         proportion 0.33333
         proportion 0.5
         proportion 0.66667
+        proportion 1.0
     }
 
-    struts {}
+    preset-window-heights {       // Cycle targets for MOD+SHIFT+CTRL+R
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+        proportion 1.0
+    }
 
     focus-ring {
         width 4
@@ -24,5 +35,4 @@ layout {
         offset x=0 y=5
         color "#00000070"
     }
-
 }
