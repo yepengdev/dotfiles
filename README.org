@@ -1,48 +1,240 @@
 #+TITLE: dotfiles
-#+SUBTITLE: managed with chezmoi
+#+SUBTITLE: managed with chezmoi — Gentoo Linux / niri Wayland
 
-** 安装
+* 快速开始（新机器）
 
-#+begin_src sh
-  chezmoi init --apply git@github.com:yepengdev/dotfiles.git
-#+end_src
-
-** 更新
+** 安装 chezmoi
 
 #+begin_src sh
-  chezmoi diff   # 查看差异
-  chezmoi apply  # 应用变更
+# Gentoo
+sudo emerge --ask app-admin/chezmoi
+
+# Other distros
+# curl -sfL https://git.io/chezmoi | sh
 #+end_src
 
-** 仓库结构说明
+** 克隆并应用
 
-chezmoi 在 source 目录使用带前缀的文件名（~/.local/share/chezmoi/）：
+#+begin_src sh
+chezmoi init --apply git@github.com:yepengdev/dotfiles.git
+#+end_src
 
-| 前缀              | 含义          | 示例                       |
-|-------------------+--------------+---------------------------|
-| dot_              | 点文件前缀     | dot_bashrc → ~/.bashrc     |
-| executable_dot_   | 可执行点文件   | executable_dot_xinitrc     |
-| dot_config/       | ~/.config/ 下 | dot_config/fish/config.fish |
-| readonly_         | 只读属性       | (插件文件)                  |
+这会：
+1. Clone 仓库到 ~/.local/share/chezmoi/
+2. 将所有 dotfiles 安装到 home 目录
+3. 自动跳过 .git 目录和插件/自动生成文件
 
-** 已管理配置
+** ⚠ 部署后需要手动操作
 
-- bash（.bashrc、.profile、.xinitrc、.xprofile）
-- Xresources
-- QtProject.conf
-- electron-flags.conf
-- fish（config.fish、conf.d/*、functions/*）
-- foot（foot.ini、themes.sh）
-- fuzzel（fuzzel.ini）
-- hypr（hyprland 全套配置）
-- niri（config.kdl、cfg/*）
-- swaylock（config）
-- waybar（config、style.css、net-speed.sh）
-- yazi（yazi.toml、init.lua、plugins/*）
-- zathura（zathurarc）
-- doom emacs（config.el、init.el、packages.el）
+新机器上执行完 ~chezmoi init --apply~ 后：
 
-** 注意
+#+begin_src sh
+# 1. 部署 portage 系统配置（需要 root）
+chezmoi apply   # 安装 run_once_deploy-portage.sh
+              # 脚本会自动复制 ~/.config/portage/ → /etc/portage/
 
-- fish、niri、doom 有自己的 git 仓库（~/.config/{fish,niri,doom}/.git），chezmoi 不管理这些 .git 目录
-- 插件/自动生成文件（fisher plugins、tide 等）通过 .chezmoiignore 排除
+# 2. 恢复已安装的软件包
+sudo emerge --ask $(cat ~/.config/portage-world)
+
+# 3. 安装 niri_tweaks 依赖
+# Python3 和 jq 通常已预装，检查：
+which python3 jq
+#+end_src
+
+* 日常使用
+
+| 命令                        | 作用                        |
+|-----------------------------+-----------------------------|
+| ~chezmoi diff~               | 查看本地与源的差异          |
+| ~chezmoi apply~              | 应用变更到 home 目录        |
+| ~chezmoi re-add ~/path~      | 将文件变更同步回 chezmoi    |
+| ~chezmoi add ~/path~         | 将新文件纳入 chezmoi 管理   |
+| ~chezmoi status~             | 查看管理状态                |
+| ~chezmoi update~             | 从远程拉取最新配置          |
+| ~chezmoi cd~                 | 跳到 source 目录            |
+
+** 典型工作流
+
+#+begin_src sh
+# 修改某个配置后：
+chezmoi re-add ~/.config/niri/cfg/keybinds.kdl
+chezmoi diff                    # 确认变更正确
+cd ~/.local/share/chezmoi
+git commit -m "niri: ..."
+git push
+#+end_src
+
+* 文件命名规则
+
+chezmoi 在 source 目录使用前缀映射路径：
+
+| 前缀                              | 映射到                    | 示例                                                                 |
+|-----------------------------------+---------------------------+----------------------------------------------------------------------|
+| ~dot_~                            | ~.~ 开头                   | ~dot_bashrc~ → ~/.bashrc~                                            |
+| ~dot_config/~                     | ~/.config/~ 下            | ~dot_config/niri/config.kdl~ → ~/.config/niri/config.kdl~            |
+| ~executable_dot_~                 | 可执行 + .开头             | ~executable_dot_xinitrc~ → ~/.xinitrc~（可执行）                     |
+| ~private_~                        | 敏感文件（权限 600）      | ~private_fcitx5/~ → ~/.config/fcitx5/~（含密钥/令牌）                |
+| ~symlink_~                        | 符号链接                   | ~symlink_pipewire.service~ → 软链到目标位置                          |
+| ~run_once_~                       | 仅在首次 ~apply~ 执行一次  | ~run_once_deploy-portage.sh.tmpl~ → 新机自动运行                     |
+| ~dot_config/portage/~ → /etc/  | 见下方说明                | ~dot_config/portage/make.conf~ → 通过 deploy 脚本复制到 /etc/portage/ |
+
+~make.conf~ 等系统文件不在 home 目录下，chezmoi 无法直接管理。
+做法：在 ~.config/portage/~ 维护副本，用 ~run_once~ 脚本部署到 /etc/portage/。
+
+* 已管理的完整配置清单
+
+** Shell 环境
+
+| 文件                        | 内容                              |
+|-----------------------------+-----------------------------------|
+| ~.bashrc~                   | Bash 配置                         |
+| ~.profile~                  | 登录 shell 环境                   |
+| ~.xinitrc~                  | X11 启动脚本（备用）               |
+| ~.xprofile~                 | X11 环境变量（备用）               |
+| ~.Xresources~               | X11 资源                          |
+| ~dot_config/zsh/~           | Zsh 配置                          |
+| ~dot_config/fish/~          | Fish shell 配置（config.fish 等） |
+
+** 窗口管理器
+
+| 文件                                | 内容                              |
+|-------------------------------------+-----------------------------------|
+| ~dot_config/niri/~                  | **niri** — 当前主力 WM            |
+| ~dot_config/niri/config.kdl~        | 入口（仅 include）                 |
+| ~dot_config/niri/cfg/*.kdl~         | 模块化配置（8 个文件）             |
+| ~dot_config/niri/scripts/~          | **niri_tweaks** 辅助脚本           |
+| ~dot_config/niri/NIRI.org~          | 配置详解文档（Org mode）           |
+| ~dot_config/niri-sidebar/~          | **niri-sidebar** 侧边栏配置        |
+| ~dot_config/hypr/~                  | hyprland — 旧配置（备查）          |
+| ~dot_config/swaylock/~              | 锁屏配置                          |
+| ~dot_config/waybar/~                | waybar — 旧配置（备查）            |
+
+*** niri 配置文件速览
+
+每个文件的功能：
+
+| 文件                    | 用途                                |
+|-------------------------+-------------------------------------|
+| ~cfg/autostart.kdl~     | 开机自启动（nm-applet, fcitx5 等）  |
+| ~cfg/keybinds.kdl~      | 全部快捷键（含 niri_tweaks 绑定）   |
+| ~cfg/input.kdl~         | 键盘/触摸板/小红点/焦点策略         |
+| ~cfg/display.kdl~       | 显示器配置（占位，按需启用）         |
+| ~cfg/layout.kdl~        | 间隙/尺寸/焦点环/阴影               |
+| ~cfg/rules.kdl~         | 窗口规则（Emacs, Zathura 等）       |
+| ~cfg/animation.kdl~     | 弹簧动画 + 自定义 GLSL 烟雾着色器   |
+| ~cfg/misc.kdl~          | 环境变量/光标/Overview/模糊等       |
+
+*** niri_tweaks 脚本
+
+| 脚本                                            | 功能                                              |
+|-------------------------------------------------+---------------------------------------------------|
+| ~scripts/niri_workspace_helper.py~               | 数字键二次按→Overview；滚轮跳过空工作区并循环      |
+| ~scripts/niri_overview_bind.sh~                  | Overview 中 Ctrl+箭头 改移动工作区而非窗口         |
+
+** 终端相关
+
+| 文件                          | 内容                          |
+|-------------------------------+-------------------------------|
+| ~dot_config/foot/~            | foot 终端                     |
+| ~dot_config/kitty/~           | kitty 终端（备用）             |
+| ~dot_config/alacritty/~       | Alacritty 终端                |
+| ~dot_config/btop/~            | 系统监控（btop）              |
+| ~dot_config/mpv/~             | 视频播放器                    |
+| ~dot_config/zathura/~         | PDF 阅读器                    |
+| ~dot_config/yazi/~            | 文件管理器（终端）             |
+
+** 编辑器
+
+| 文件                      | 内容                          |
+|---------------------------+-------------------------------|
+| ~dot_config/nvim/~        | Neovim（LazyVim）             |
+| ~dot_config/doom/~        | Doom Emacs                    |
+| ~dot_config/emacs/~       | 被 Doom 接管，chezmoi 不管理  |
+
+** 输入法（Fcitx5）
+
+| 文件                          | 内容                          |
+|-------------------------------+-------------------------------|
+| ~dot_config/fcitx5/~          | 输入法配置                    |
+| ~dot_config/fcitx5/profile~   | 输入法方案列表                |
+| ~dot_config/fcitx5/conf/~     | 各输入法模块配置              |
+
+文件夹前缀 ~private_~ 表示包含可能的敏感信息，chezmoi 会以 600 权限安装。
+
+** 主题与外观
+
+| 文件                          | 内容                          |
+|-------------------------------+-------------------------------|
+| ~dot_config/gtk-3.0/~         | GTK3 主题                     |
+| ~dot_config/gtk-4.0/~         | GTK4 主题                     |
+| ~dot_config/qt5ct/~           | Qt5 外观                      |
+| ~dot_config/qt6ct/~           | Qt6 外观                      |
+| ~dot_config/Kvantum/~         | Kvantum 主题引擎              |
+| ~dot_config/fontconfig/~      | 字体配置                      |
+| ~dot_config/dunst/~           | 通知守护进程                  |
+
+** 系统配置（Portage）
+
+| 文件/脚本                                     | 内容                            |
+|-----------------------------------------------+---------------------------------|
+| ~dot_config/portage-world~                    | 手动安装的软件包列表（234 个）  |
+| ~dot_config/portage/~                         | /etc/portage/ 的 home 副本      |
+| ~dot_config/portage/make.conf~                | Portage 主配置（CFLAGS, USE 等）|
+| ~dot_config/portage/package.use/~             | 各包的 USE flag                 |
+| ~dot_config/portage/package.accept_keywords/~ | ~arch 包                        |
+| ~dot_config/portage/package.mask/~            | 屏蔽的包                        |
+| ~dot_config/portage/package.license/~         | 接受许可的包                    |
+| ~dot_config/portage/package.env/~             | 特定包的环境变量                |
+| ~dot_config/portage/package.cflags/~          | 特定包的编译标志                |
+| ~dot_config/portage/sets/~                    | Portage 包集合                  |
+| ~dot_config/portage/env/~                     | Portage 环境覆盖                |
+| ~dot_config/portage/repos.conf/~              | 仓库配置（gentoo, local 等）    |
+| ~dot_config/portage/bashrc.d/~                | Portage 钩子脚本                |
+| ~dot_config/portage/profile/~                 | 自定义 profile                  |
+| ~run_once_deploy-portage.sh.tmpl~             | 自动部署到 /etc/portage/ 的脚本 |
+
+** 其他
+
+| 文件                              | 内容                          |
+|-----------------------------------+-------------------------------|
+| ~dot_config/environment.d/~       | 环境变量（IME 配置）           |
+| ~dot_config/systemd/user/~        | 用户 systemd 服务             |
+| ~dot_config/user-dirs.dirs~       | XDG 用户目录                  |
+| ~dot_config/user-dirs.locale~     | XDG 用户目录语言              |
+| ~dot_config/mimeapps.list~        | 默认应用                      |
+| ~dot_config/chrome-flags.conf~    | Chrome/Chromium 启动标志      |
+| ~dot_config/electron-flags.conf~  | Electron 启动标志             |
+| ~dot_config/thorium-flags.conf~   | Thorium 浏览器启动标志        |
+| ~dot_config/QtProject.conf~       | Qt 项目配置                   |
+
+* 新机器完整恢复流程
+
+将在新 Gentoo 机器上恢复到与当前一致的状态：
+
+#+begin_src sh
+# 1. 基础系统
+# 确保已安装：Git, chezmoi, sudo doas
+
+# 2. 克隆 dotfiles
+chezmoi init --apply git@github.com:yepengdev/dotfiles.git
+
+# 3. 部署系统配置
+sudo ~/.local/share/chezmoi/run_once_deploy-portage.sh.tmpl
+# 或 chezmoi apply（自动触发 run_once 脚本）
+
+# 4. 安装所有软件包（234 个）
+sudo emerge --ask $(cat ~/.config/portage-world)
+
+# 5. ✅ 重启即可使用 niri
+#+end_src
+
+* 注意事项
+
+| 注意点                      | 说明                                                    |
+|-----------------------------+---------------------------------------------------------|
+| ~.git~ 目录冲突             | fish、niri、doom 自带 .git，chezmoi 通过 ~.chezmoiignore~ 排除 |
+| 插件文件                    | Fisher 插件、tide、nvim 插件等均通过 ignore 排除         |
+| 含密钥的目录                | fcitx5（private_）、noctalia（未管理）含 API key/令牌     |
+| niri_tweaks 依赖            | 需要 python3 和 jq                                      |
+| 配置重载                    | niri 自动监视文件变更，保存即生效                        |
+| Chezmoi 同步                | 修改后记得 ~chezmoi re-add~ + git commit + push          |
