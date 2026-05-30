@@ -27,5 +27,8 @@ spawn-at-startup "/usr/libexec/xdg-desktop-portal" "-r"
 // Emacs daemon (background server for emacsclient)
 spawn-at-startup "/usr/bin/emacs" "--daemon"
 
-// Niri initialization helper (custom script)
+// Niri session manager (window restoration, env setup)
 spawn-at-startup "nirinit"
+
+// Auto-maximize when only one window in workspace; -T = unmaximize on second window open
+spawn-at-startup "oniri" "-T"
