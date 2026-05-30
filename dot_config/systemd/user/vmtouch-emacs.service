@@ -1,0 +1,13 @@
+[Unit]
+Description=vmtouch lock for Emacs directories
+After=default.target
+
+[Service]
+Type=simple
+# 一次性锁定后守护进程常驻
+ExecStart=/usr/bin/vmtouch -l -d /home/peng/.config/emacs /home/peng/.config/doom
+ExecStop=/usr/bin/vmtouch -e /home/peng/.config/emacs /home/peng/.config/doom
+Restart=no
+
+[Install]
+WantedBy=default.target
