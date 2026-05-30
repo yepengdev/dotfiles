@@ -1,50 +1,116 @@
+// ═══════════════════════════════════════════════════════════════════════════════
+// Niri 动画配置
+// Niri Animation Configuration
+// ═══════════════════════════════════════════════════════════════════════════════
+//
+// Niri 支持两种动画类型：
+//
+//   1. Spring（弹簧）
+//      基于物理弹簧模型的动画。参数：
+//        damping-ratio   阻尼比 — 0.0=永不停止, <1.0=欠阻尼(有回弹), 1.0=临界阻尼(无回弹), >1.0=过阻尼
+//        stiffness       刚度 — 越大越快
+//        epsilon         精度 — 越小动画结束判定越精确（避免跳变）
+//
+//      阻尼比参考：
+//        0.3 = 明显回弹
+//        0.6 = 轻微回弹
+//        0.8 = 几乎不回弹
+//        1.0 = 临界阻尼（最快无回弹）
+//
+//      刚度参考：
+//        300  = 慢而软
+//        500  = 适中
+//        1000 = 快
+//        1500 = 很快
+//
+//   2. Easing（缓动曲线）
+//      固定时长动画。参数：
+//        duration-ms    时长（毫秒）
+//        curve          曲线函数
+//
+//      可用曲线：linear, ease-out-quad, ease-out-cubic, ease-out-expo,
+//                ease-out-back（带轻微过冲）, cubic-bezier(p1x,p1y,p2x,p2y)
+//
+//      关闭动画：单个动画块内写 "off" 即可禁用
+//
+// ═══════════════════════════════════════════════════════════════════════════════
+
 animations {
 
-    // ═══════════════════════════════════════════════════════════════
-    // Workspace Switch: light bounce
-    // 工作区切换：轻微回弹
-    // ═══════════════════════════════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════════════════
+    // Workspace Switch — 工作区切换
+    // 效果：水平滑动切换到上/下一个工作区
+    // 参数：阻尼比 0.7（轻微回弹），刚度 1200（较快），精度 0.0001
+    // ══════════════════════════════════════════════════════════════════════════
     workspace-switch {
         spring damping-ratio=0.7 stiffness=1200 epsilon=0.0001
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // Horizontal View Movement, Window Movement & Resize:
-    // unified snappy bounce for all spatial transitions
-    // 水平视图移动、窗口移动与缩放：统一灵动回弹
-    // ═══════════════════════════════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════════════════
+    // Horizontal View Movement — 水平视图滚动
+    // 效果：鼠标滚轮水平滚动工作区时的位移动画
+    // ══════════════════════════════════════════════════════════════════════════
     horizontal-view-movement {
         spring damping-ratio=0.8 stiffness=1000 epsilon=0.0001
     }
+
+    // Window Movement — 窗口在列间/列内移动
+    // 效果：用快捷键 (Ctrl+HJKL) 移动窗口时的过渡动画
+    // 与 horizontal-view-movement 参数一致，保证联动时视觉同步
     window-movement {
         spring damping-ratio=0.8 stiffness=1000 epsilon=0.0001
     }
+
+    // Window Resize — 窗口缩放
+    // 效果：调整窗口尺寸或切换列宽时的动画
+    // 与 window-movement 参数一致，保证窗口移动+缩放时视觉同步
     window-resize {
         spring damping-ratio=0.8 stiffness=1000 epsilon=0.0001
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // Window Open: smoke reveal effect
-    // 窗口打开：烟雾粒子展开效果
+    // ══════════════════════════════════════════════════════════════════════════
+    // Window Open — 窗口打开
+    // 效果：烟雾粒子从中心向外展开，伴随扭曲变形
     //
-    // GLSL NOTE — The helper functions hash(), noise(), fbm(), and
-    // warpedFbm() below are DUPLICATED in the window-close shader.
-    // niri does NOT support GLSL #include or shared shader definitions
-    // (each custom-shader is an independent GLSL program).
-    // Keep the duplicates in sync when making changes.
-    // ═══════════════════════════════════════════════════════════════
+    // GLSL 着色器说明：
+    //   本着色器和 window-close 共享 hash() noise() fbm() warpedFbm() 四个辅助函数
+    //   它们是完全相同的代码，但因 niri 不支持 GLSL #include 或共享着色器定义，
+    //   必须分别在 open_color 和 close_color 中各自定义一份。
+    //   ▸ 修改辅助函数时务必同步更新两处！
+    //
+    // 着色器核心流程：
+    //   1. 用多层 warpedFbm 生成动态流体噪声纹理
+    //   2. 根据距窗口中心的距离计算 reveal 遮罩（中心先显示）
+    //   3. 用 progress (p) 控制扭曲强度逐渐减弱
+    //   4. 对 UV 坐标施加翘曲 (warped_uv)，制造烟雾扭曲效果
+    //   5. 最终颜色 = 纹理采样 × reveal 遮罩
+    //
+    // 可用 uniform 变量：
+    //   niri_progress        — 0→1 动画进度
+    //   niri_clamped_progress— 0→1 限幅后的进度（推荐使用）
+    //   niri_random_seed     — 每窗口随机种子（用于烟雾差异化）
+    //   niri_tex             — 窗口纹理
+    //   niri_geo_to_tex      — 几何坐标到纹理坐标的映射矩阵
+    //
+    // 入口函数必须名为 open_color(vec3 coords_geo, vec3 size_geo)
+    //
+    // 调试：着色器编译失败时 niri 会回退到默认动画并输出警告，
+    // 查看日志：journalctl -b --user -u niri --no-pager -n 50
+    // ══════════════════════════════════════════════════════════════════════════
     window-open {
         duration-ms 1000
         curve "ease-out-cubic"
         custom-shader r"
+            // ── 伪随机哈希（输入二维坐标，输出 0~1 随机数）──
             float hash(vec2 p) {
                 return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
             }
 
+            // ── 二维平滑噪声（双线性插值版 Perlin 噪声）──
             float noise(vec2 p) {
                 vec2 i = floor(p);
                 vec2 f = fract(p);
-                f = f * f * (3.0 - 2.0 * f);
+                f = f * f * (3.0 - 2.0 * f);            // 平滑插值
                 float a = hash(i);
                 float b = hash(i + vec2(1.0, 0.0));
                 float c = hash(i + vec2(0.0, 1.0));
@@ -52,6 +118,7 @@ animations {
                 return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
             }
 
+            // ── 分形布朗运动（FBM）：叠加 6 层噪声，频率倍增，振幅减半 ──
             float fbm(vec2 p) {
                 float v = 0.0;
                 float amp = 0.5;
@@ -63,6 +130,9 @@ animations {
                 return v;
             }
 
+            // ── 翘曲 FBM：用三层 FBM 做域翘曲，产生流体般流动纹理 ──
+            // 在原始噪声坐标上叠加多次 fbm 偏移，制造复杂细节
+            // t 参数随时间变化，驱动流体运动
             float warpedFbm(vec2 p, float t) {
                 vec2 q = vec2(fbm(p + vec2(0.0, 0.0)),
                               fbm(p + vec2(5.2, 1.3)));
@@ -76,21 +146,27 @@ animations {
                 return fbm(p + 6.0 * s);
             }
 
+            // ── 打开动画主函数 ──
             vec4 open_color(vec3 coords_geo, vec3 size_geo) {
-                float p = niri_clamped_progress;
-                vec2 uv = coords_geo.xy;
-                float seed = niri_random_seed * 100.0;
+                float p = niri_clamped_progress;           // 0→1
+                vec2 uv = coords_geo.xy;                   // 当前片元 UV
+                float seed = niri_random_seed * 100.0;      // 窗口随机种子
 
+                // 时间参数：随进度流动
                 float t = p * 12.0 + seed;
 
+                // 流体噪声值（用于影响 reveal 边界和扭曲）
                 float fluid = warpedFbm(uv * 2.0 + seed, t);
 
+                // 距窗口中心的椭圆距离
                 vec2 center = uv - 0.5;
                 float dist = length(center * vec2(1.0, 0.7));
 
+                // reveal 遮罩：中心+流体噪声混合 → 从中心向外展开
                 float appear = (1.0 - dist * 1.2) + (1.0 - fluid) * 0.7;
                 float reveal = smoothstep(appear + 0.5, appear - 0.5, (1.0 - p) * 1.8);
 
+                // UV 扭曲（烟雾飘散效果）：开始时扭曲强，逐渐恢复
                 float distort_strength = (1.0 - p) * (1.0 - p) * 0.35;
                 vec2 wq = vec2(fbm(uv * 2.0 + vec2(0.0, t * 0.2)),
                                fbm(uv * 2.0 + vec2(5.2, t * 0.2)));
@@ -98,6 +174,7 @@ animations {
                                fbm(uv * 2.0 + 4.0 * wq + vec2(8.3, 2.8)));
                 vec2 warped_uv = uv + (wr - 0.5) * distort_strength;
 
+                // 采样原始窗口纹理（用扭曲后的 UV）
                 vec3 tex_coords = niri_geo_to_tex * vec3(warped_uv, 1.0);
                 vec4 color = texture2D(niri_tex, tex_coords.st);
 
@@ -106,13 +183,18 @@ animations {
         "
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // Window Close: smoke dissolve effect
-    // 窗口关闭：烟雾消散效果
+    // ══════════════════════════════════════════════════════════════════════════
+    // Window Close — 窗口关闭
+    // 效果：烟雾从边缘向中心溶解消散，尾部淡出
     //
-    // GLSL NOTE — hash(), noise(), fbm(), and warpedFbm() are
-    // duplicates of the window-open shader above. Keep in sync.
-    // ═══════════════════════════════════════════════════════════════
+    // 与 window-open 的差异：
+    //   1. dissolve 遮罩从边缘开始（而非中心）
+    //   2. 扭曲强度随进度增强（而非减弱）
+    //   3. 末尾有 tail 淡出（smoothstep 1.0→0.8）
+    //
+    // 共享函数（hash, noise, fbm, warpedFbm）与 window-open 完全一致，
+    // 修改时请同步更新！(niri 不支持 #include)
+    // ══════════════════════════════════════════════════════════════════════════
     window-close {
         duration-ms 1000
         curve "ease-out-cubic"
@@ -162,15 +244,16 @@ animations {
                 float seed = niri_random_seed * 100.0;
 
                 float t = p * 12.0 + seed;
-
                 float fluid = warpedFbm(uv * 2.0 + seed, t);
 
                 vec2 center = uv - 0.5;
                 float dist = length(center * vec2(1.0, 0.7));
 
+                // dissolve 遮罩：边缘先溶解（与 open 的 reveal 相反）
                 float dissolve = (1.0 - dist) * 1.2 + fluid * 0.7;
                 float remain = smoothstep(dissolve + 0.5, dissolve - 0.5, p * 1.8);
 
+                // UV 扭曲（溶解扭曲）：结束时扭曲最强
                 float distort_strength = p * p * 0.4;
                 vec2 wq = vec2(fbm(uv * 2.0 + vec2(0.0, t * 0.2)),
                                fbm(uv * 2.0 + vec2(5.2, t * 0.2)));
@@ -181,49 +264,57 @@ animations {
                 vec3 tex_coords = niri_geo_to_tex * vec3(warped_uv, 1.0);
                 vec4 color = texture2D(niri_tex, tex_coords.st);
 
+                // 尾部淡出：p > 0.8 时开始渐隐
                 float tail = smoothstep(1.0, 0.8, p);
                 return color * remain * tail;
             }
         "
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // Config Notification: bouncy alert
-    // 配置通知：弹性较强（提示配置更新成功）
-    // ═══════════════════════════════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════════════════
+    // Config Notification — 配置通知弹窗
+    // 效果：配置重载成功/失败时底部出现的通知条
+    // 参数：阻尼比 0.6（较弹），刚度 1200（快），精度 0.001（稍低，避免跳变）
+    // ══════════════════════════════════════════════════════════════════════════
     config-notification-open-close {
         spring damping-ratio=0.6 stiffness=1200 epsilon=0.001
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // Screenshot UI: fade in
-    // 截图界面：淡入淡出风格
-    // ═══════════════════════════════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════════════════
+    // Screenshot UI — 截图界面
+    // 效果：截图时遮罩层和提示文字的淡入
+    // 使用缓动曲线而非弹簧：300ms ease-out-quad
+    // ══════════════════════════════════════════════════════════════════════════
     screenshot-ui-open {
         duration-ms 300
         curve "ease-out-quad"
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // Overview (workspace grid): critically damped (no bounce)
-    // 概览模式：临界阻尼（无回弹）
-    // ═══════════════════════════════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════════════════
+    // Overview Open/Close — 工作区概览
+    // 效果：按 Mod+O 或触发左上角热区时，工作区缩放到 Overview 视图
+    // 临界阻尼 (1.0) 确保无回弹，快速到位
+    // 刚度 900 适中，既不过慢也不过冲
+    // ══════════════════════════════════════════════════════════════════════════
     overview-open-close {
         spring damping-ratio=1.0 stiffness=900 epsilon=0.0001
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // Exit Confirmation Dialog: light bounce
-    // 退出确认弹窗：轻微弹性
-    // ═══════════════════════════════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════════════════
+    // Exit Confirmation — 退出确认弹窗
+    // 效果：按 Ctrl+Alt+Delete 后弹出的确认对话框
+    // 阻尼比 0.6 带轻微弹性，刚度 500 较低（慢而温柔）
+    // epsilon 0.01 较高（弹窗动画不需要高精度）
+    // ══════════════════════════════════════════════════════════════════════════
     exit-confirmation-open-close {
         spring damping-ratio=0.6 stiffness=500 epsilon=0.01
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // Recent Windows Switcher Close: critically damped
-    // 最近窗口切换器关闭：临界阻尼
-    // ═══════════════════════════════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════════════════
+    // Recent Windows Switcher Close — 最近窗口切换器关闭
+    // 效果：Mod+Tab 窗口切换器关闭时的淡出
+    // 临界阻尼 (1.0) 快速无回弹
+    // ══════════════════════════════════════════════════════════════════════════
     recent-windows-close {
         spring damping-ratio=1.0 stiffness=800 epsilon=0.001
     }
