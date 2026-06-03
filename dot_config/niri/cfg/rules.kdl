@@ -61,5 +61,9 @@ window-rule {
 // Without this, the IME popup draws an unwanted opaque border.
 window-rule {
     match app-id="fcitx5"
-    draw-border-with-background false
+    draw-border-with-background true
+    background-effect {
+        xray false
+        blur true
+    }
 }

@@ -1,11 +1,13 @@
 [Unit]
-Description=Niri session manager
+Description=Nirinit - Niri session manager
+PartOf=graphical-session.target
 After=graphical-session.target
 
 [Service]
 Type=simple
+Restart=always
 ExecStart=%h/.cargo/bin/nirinit
-Restart=on-failure
+PrivateTmp=true
 
 [Install]
 WantedBy=graphical-session.target

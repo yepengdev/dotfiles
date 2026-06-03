@@ -1,7 +1,3 @@
-if test -d ~/.local/bin
-    set -gx PATH $PATH ~/.local/bin/**/
-end
-
 fish_add_path ~/.local/bin
 fish_add_path ~/.local/bin/statusbar
 fish_add_path ~/.cargo/bin
