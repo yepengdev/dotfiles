@@ -341,11 +341,38 @@
            "<link rel=\"stylesheet\" type=\"text/css\" href=\"" css-dir "/htmlize.css\"/>"))
     (setq org-html-head-extra "")))
 
-;; ─── 外部浏览器打开链接 ──────────────────────────────────────────
-;; xdg-open 委托给桌面环境的默认处理器
-;;（Firefox/Chrome/用户在系统范围内配置的任何浏览器）。
-;; 硬编码特定浏览器会在无头终端或非 XDG 桌面上失效。
+;; ─── 外部链接打开 ────────────────────────────────────────────
+;; browse-url: 通用链接（普通打开/org 链接）走 xdg-open 到默认浏览器。
 (setq browse-url-browser-function #'browse-url-xdg-open)
+
+;; +lookup/online（SPC s o）打开搜索 URL 后，自动将 niri 焦点切到浏览器。
+;; 用法：结合 niri IPC（`niri msg --json windows`）按 app_id 查窗口 ID，
+;; 然后用 `focus-window --id` 切换焦点，避免 Wayland 下 xdg-open 不自动
+;; 弹到前台的问题。
+(defun my/niri-focus-by-app-id (app-id)
+  "Focus first niri window whose app_id matches APP-ID.
+Uses `niri msg --json windows` parsed via jq, then `focus-window --id`."
+  (call-process-shell-command
+   (format "niri msg action focus-window --id $(niri msg --json windows | jq --arg a \"%s\" '.[] | select(.app_id==$a) | .id')" app-id)
+   nil 0 nil))
+
+(defun my/open-url-and-focus (url)
+  "Open URL via xdg-open, then focus the browser with `my/niri-focus-by-app-id'.
+Delays 0.4s for browser window to appear."
+  (interactive (list (read-string "URL: ")))
+  (let ((process-connection-type nil))
+    (start-process "xdg-open" nil "xdg-open" url)
+    (run-at-time 0.4 nil
+      (lambda ()
+        (my/niri-focus-by-app-id "brave-browser")))))
+(setq +lookup-open-url-fn #'my/open-url-and-focus)
+
+;; 扩展 +lookup/online 搜索引擎列表（追加到默认 Google/Wikipedia 等之后）。
+(setq +lookup-provider-url-alist
+      (append +lookup-provider-url-alist
+              '(("Bing"      "https://www.bing.com/search?q=%s")
+                ("Bilibili"  "https://search.bilibili.com/all?keyword=%s")
+                ("Douyin"    "https://www.douyin.com/search/%s"))))
 
 ;; ─── 大型 Org 文件处理（≥1 MiB）────────────────────────────────────
 ;;

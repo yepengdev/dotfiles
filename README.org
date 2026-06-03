@@ -150,6 +150,7 @@ chezmoi 在 source 目录使用前缀映射路径：
 | ~dot_config/nvim/~        | Neovim（LazyVim）             |
 | ~dot_config/doom/~        | Doom Emacs                    |
 | ~dot_config/emacs/~       | 被 Doom 接管，chezmoi 不管理  |
+| ~+lookup/online~ SPC s o  | niri IPC 自动切焦点到浏览器（Brave），见 config.el lookup 节 |
 
 ** 输入法（Fcitx5）
 
