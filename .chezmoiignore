@@ -1,1 +1,8 @@
 dot_config/doom/dot_git
+dot_config/fish/dot_git
+dot_config/yazi/plugins/**/dot_git
+dot_config/fcitx5/profile_*
+dot_config/fcitx5/conf/notifications.conf_*
+dot_config/fcitx5/conf/cached_layouts
+dot_config/portage/repos.conf/eselect-repo.conf~
+dot_config/qt5ct/qt5ct.conf.lock
