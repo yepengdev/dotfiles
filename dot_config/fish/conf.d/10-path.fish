@@ -8,3 +8,4 @@ fish_add_path /opt/bin
 fish_add_path /usr/lib/llvm/21/bin
 fish_add_path /usr/lib/llvm/20/bin
 fish_add_path $__npm_prefix/bin
+fish_add_path /etc/eselect/wine/bin
