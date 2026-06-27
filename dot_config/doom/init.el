@@ -1,5 +1,7 @@
 ;;; init.el -*- lexical-binding: t; -*-
 
+;; 启用 use-package 载入统计（用于分析启动速度）
+
 ;; 此文件控制 Doom 启用哪些模块及其加载顺序。
 ;; 修改后请记得运行 'doom sync'！
 
@@ -14,24 +16,24 @@
 
 (doom! :input
        ;;bidi              ; 帮助你从右到左书写
-       chinese             ; 中文拼音首字母搜索（SPC s s 可用）
+       ;;chinese           ; 中文拼音首字母搜索 — 自己配置了 fcitx + evil-pinyin
        ;;japanese           ; 日语输入支持
        ;;layout            ; auie,ctsrnm 是更优秀的主行键位
 
        :completion
        ;;company           ; 终极代码补全后端
-       (corfu +orderless)  ; 使用 cap(f)、cape 补全，如羽毛般轻盈！
+       (corfu +orderless +dabbrev)  ; 使用 cap(f)、cape 补全，如羽毛般轻盈！
        ;;helm              ; *另一个*寻找爱与生活的搜索引擎
        ;;ido               ; 另一个*另一个*搜索引擎……
        ;;ivy               ; 一个寻找爱与生活的搜索引擎
-       (vertico +icons)           ; 未来的搜索引擎
+       (vertico +childframe +icons)           ; 未来的搜索引擎
 
        :ui
        deft              ; Emacs 版的 Notational Velocity
        doom              ; 让 DOOM 呈现其样貌的配置
        ;;dashboard         ; Emacs 的漂亮启动画面
        ;;doom-quit         ; 退出 Emacs 时的 DOOM 退出提示
-       (emoji +unicode)  ; 🙂
+       emoji             ; 🙂
        hl-todo           ; 高亮 TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        indent-guides     ; 高亮缩进列
        ;;ligatures         ; 连字和符号，让代码重新变漂亮
@@ -43,13 +45,14 @@
        (popup +defaults)   ; 驯服突然出现的临时窗口
        ;;smooth-scroll     ; 流畅丝滑，让你不相信这不是黄油
        ;;tabs              ; Emacs 标签栏
-       treemacs          ; 项目文件树，比 neotree 更酷
+       treemacs           ; 项目文件树，比 neotree 更酷
        ;;unicode           ; 各种语言的扩展 Unicode 支持
        (vc-gutter +pretty) ; 边缘显示版本控制差异
        ;;vi-tilde-fringe   ; 在缓冲区末尾外显示波浪线
-       ;; window-select     ; 可视化切换窗口
-       workspaces        ; 标签模拟、持久化及独立工作区
-       ;;zen               ; 无干扰编码或写作
+        (window-select +numbers)     ; 可视化切换窗口
+        workspaces        ; 标签模拟、持久化及独立工作区
+        auto-theme         ; 日/夜主题自动切换
+       zen               ; 无干扰编码或写作
 
        :editor
        (evil +everywhere); 加入黑暗面，我们有好吃的饼干
@@ -96,17 +99,26 @@
        ;;editorconfig      ; 让别人争论制表符 vs 空格吧
        ;;ein               ; 用 Emacs 驯服 Jupyter 笔记本
        (eval +overlay)     ; 运行代码（还有 REPL）
-       (lookup +docsets)              ; 浏览代码及其文档
+       (lookup +dictionary +docsets)              ; 浏览代码及其文档
        ;;llm               ; 当我说你需要朋友时，我不是指……
        ;;(lsp +eglot)      ; 把 Emacs 变成 VS Code
        magit             ; Emacs 的 Git 前端
        ;;make              ; 从 Emacs 运行 make 任务
+       notes      ; Denote + Deft 笔记系统（+film: 观影日记）
        ;;pass              ; 给极客用的密码管理器
        pdf               ; PDF 增强
+       pomodoro          ; 番茄钟 + 计时器 + 桌面通知
+       cjk               ; CJK 字符统计（纯 C 模块）
+       jieba             ; 结巴中文分词 + TF-IDF 关键词提取
        ;;terraform         ; 基础设施即代码
        ;;tmux              ; 与 tmux 交互的 API
        tree-sitter       ; 语法解析，和谐共处……
        ;;upload            ; 通过 ssh/ftp 将本地项目映射到远程
+
+       :lang
+
+       :ffi
+       dyncall            ; libffi 动态 FFI：在运行时调用任意 C 函数
 
        :os
        (:if (featurep :system 'macos) macos)  ; 改善 macOS 兼容性
@@ -171,7 +183,7 @@
        ;;(rust +lsp)       ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
        ;;scala             ; Java，但很好
        ;;(scheme +guile)   ; 一个完全狡黠的 lisp 家族
-       ;;sh                ; 她在 C xor 上叫卖 {ba,z,fi}sh 贝壳
+       (sh +fish)                ; 她在 C xor 上叫卖 {ba,z,fi}sh 贝壳
        ;;sml                ; 标准 ML 语言
        ;;solidity          ; 你需要区块链吗？不需要。
        ;;swift             ; 谁需要表情符号变量？
