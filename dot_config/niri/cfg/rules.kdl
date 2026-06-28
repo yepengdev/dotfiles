@@ -3,7 +3,7 @@
 
 // Default rule: no rounded corners, blur background
 window-rule {
-    geometry-corner-radius 0
+    geometry-corner-radius 10
     clip-to-geometry true
     background-effect {
         xray true
@@ -40,7 +40,7 @@ window-rule {
 // Emacs main window: workspace 3, maximized, blur background
 window-rule {
     match app-id="emacs"
-    open-on-workspace "3"     // Workspace layout: 1=term, 2=browser, 3=code
+    //open-on-workspace "3"     // Workspace layout: 1=term, 2=browser, 3=code
     opacity 0.85
     open-maximized true
     background-effect {
@@ -52,8 +52,22 @@ window-rule {
 // Zathura (PDF reader): no rounded corners
 window-rule {
     match app-id="^org.pwmt.zathura$"
+    open-maximized true
     geometry-corner-radius 0
     opacity 0.95
+}
+
+// Blur + rounded corners for popup menus (GTK/Qt apps)
+window-rule {
+    match app-id="^nautilus$"
+    match app-id="^org.gnome.Nautilus$"
+    match app-id="^thunar$"
+    popups {
+        geometry-corner-radius 12
+        background-effect {
+            blur true
+        }
+    }
 }
 
 // Fcitx5 candidate window: no background border
@@ -63,7 +77,24 @@ window-rule {
     match app-id="fcitx5"
     draw-border-with-background true
     background-effect {
-        xray false
         blur true
     }
 }
+window-rule {
+    match app-id="^Alacritty$"
+    open-maximized true
+
+    background-effect {
+        blur true
+    }
+}
+
+// Enable blur behind the fuzzel launcher.
+layer-rule {
+    match namespace="^launcher$"
+
+    background-effect {
+        blur true
+    }
+}
+

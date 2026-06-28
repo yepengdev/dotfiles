@@ -5,7 +5,7 @@ set -gx MANROFFOPT -c
 set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
 set -gx EMACS_SOCKET_NAME "/run/user/$(id -u)/emacs/server"
 if not set -q __npm_prefix
-    set -U __npm_prefix (npm config get prefix)
+    set -gx __npm_prefix (npm config get prefix)
 end
 
 if command -q flatpak && not string match -qr "flatpak" -- "$XDG_DATA_DIRS"

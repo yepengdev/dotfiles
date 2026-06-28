@@ -44,6 +44,9 @@ binds {
     // ─── Window Movement and Focus ───
     MOD+Q                               { close-window; }
 
+    ALT+Tab                             { focus-column-right; }
+    ALT+SHIFT+Tab                       { focus-column-left; }
+
     MOD+LEFT                            { focus-column-left; }
     MOD+H                               { focus-column-left; }
     MOD+RIGHT                           { focus-column-right; }
@@ -96,6 +99,9 @@ binds {
     MOD+CTRL+SHIFT+WHEELSCROLLDOWN      { move-column-right; }
     MOD+CTRL+SHIFT+WHEELSCROLLUP        { move-column-left; }
 
+    // Run command dialog (opens noctalia launcher in >cmd mode)
+    MOD+CTRL+R                          hotkey-overlay-title="Run Command" { spawn-sh "qs -c noctalia-shell ipc call launcher command"; }
+
     // Re-selecting the active workspace toggles overview (via niri_workspace_helper)
     MOD+1                               { spawn "python3" "/home/peng/.config/niri/scripts/niri_workspace_helper.py" "1"; }
     MOD+2                               { spawn "python3" "/home/peng/.config/niri/scripts/niri_workspace_helper.py" "2"; }
@@ -133,6 +139,10 @@ binds {
     // ─── Modes ───
     MOD+T                               { toggle-window-floating; }
     MOD+F                               { fullscreen-window; }
+    MOD+SHIFT+F                         hotkey-overlay-title="Toggle Windowed Fullscreen" { toggle-windowed-fullscreen; }
+    MOD+M                               hotkey-overlay-title="Maximize Window to Edges" { maximize-window-to-edges; }
+    MOD+G                               hotkey-overlay-title="Switch Focus Float/Tiled" { switch-focus-between-floating-and-tiling; }
+    MOD+SHIFT+O                         hotkey-overlay-title="Toggle Window Opacity" { toggle-window-rule-opacity; }
     MOD+W                               { toggle-column-tabbed-display; }
 
     // ─── Screenshots ───

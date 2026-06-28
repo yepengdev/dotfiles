@@ -36,7 +36,7 @@
        emoji             ; 🙂
        hl-todo           ; 高亮 TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        indent-guides     ; 高亮缩进列
-       ;;ligatures         ; 连字和符号，让代码重新变漂亮
+       (ligatures +extra)         ; 连字和符号，让代码重新变漂亮
        ;;minimap           ; 在侧边显示代码缩略图
        modeline          ; 时尚的 Atom 风格模式行，带 API
        nav-flash         ; 大范围移动后闪烁光标所在行

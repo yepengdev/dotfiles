@@ -1,7 +1,5 @@
 fish_add_path ~/.local/bin
-fish_add_path ~/.local/bin/statusbar
 fish_add_path ~/.cargo/bin
-fish_add_path ~/Applications/depot_tools
 fish_add_path ~/.config/emacs/bin
 fish_add_path /usr/local/sbin
 fish_add_path /opt/bin

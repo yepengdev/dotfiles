@@ -27,13 +27,13 @@
 ;; 字号 16 在现代高 DPI 显示器上平衡了舒适度（14pt 太挤）与屏幕空间
 ;;（18pt 浪费水平空间）。
 ;;
-(setq doom-font (font-spec :family "Monaspace Neon" :size 17)
-      doom-variable-pitch-font (font-spec :family "Monaspace Neon" :size 17))
+;; (setq doom-font (font-spec :family "Monaspace Neon" :size 17)
+;;       doom-variable-pitch-font (font-spec :family "Monaspace Neon" :size 17))
 ;;   (set-fontset-font t 'han (font-spec :family "LXGW WenKai Mono Screen" :size 15)))
 
 ;; (after! doom-ui
-;;   (setq doom-font (font-spec :family "Maple Mono CN" :size 17))
-;;   (setq doom-variable-pitch-font (font-spec :family "Maple Mono CN" :size 17))
+(setq doom-font (font-spec :family "Maple Mono CN" :size 17))
+(setq doom-variable-pitch-font (font-spec :family "Maple Mono CN" :size 17))
 ;;   )
 
 ;; CJK 回退：守护进程模式下等图形帧出现再设（否则 font backend 未初始化）
@@ -56,7 +56,7 @@
 ;; 自带定时器（每 60s 检查），无需额外 hook 或 timer。
 
 (use-package! circadian
-  :after doom-theme
+  :after-call doom-after-init-hook
   :init
   (setq calendar-latitude 30.57
         calendar-longitude 104.07
@@ -200,7 +200,6 @@
   :config
   (add-to-list 'super-save-predicates
                (lambda () (not buffer-read-only))))
-
 ;; ─── Palimpsest（移动文本而不删除）───────────────────────────────────
 ;;
 ;; 移动文本 vs 删除：草稿过程中，文本常需暂时搁置而非丢弃。

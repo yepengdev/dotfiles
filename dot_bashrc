@@ -8,47 +8,38 @@
 # Test for an interactive shell.  There is no need to set anything
 # past this point for scp and rcp, and it's important to refrain from
 # outputting anything in those cases.
+# 适用于 Bash ≥4.0，Gentoo/Arch 均可用
 shopt -s checkwinsize histappend cmdhist
+
+# 非交互式直接返回
 if [[ $- != *i* ]]; then
-  # Shell is non-interactive.  Be done now!
-  return
+    return
 fi
 
-# source ~/.profile
+# ---------- 环境变量（用户自定义）----------
 export EMACS_SOCKET_NAME="/run/user/$(id -u)/emacs/server"
 export IRC_CLIENT='irssi'
 unset MAILCHECK
 
+# 路径管理（前置用户目录）
 add_path() {
-  case ":$PATH:" in
-  *:"$1":*) ;;
-  *) PATH="$1:$PATH" ;;
-  esac
+    case ":$PATH:" in
+        *:"$1":*) ;;
+        *) PATH="$1:$PATH" ;;
+    esac
 }
 add_path "$HOME/.config/emacs/bin"
 add_path "$HOME/.npm-global/bin"
 add_path "$HOME/.cargo/bin"
-# export PATH="$PATH:$HOME/.config/emacs/bin/"
 
-# 手动启动 tmux（已禁用自动启动）
-# alias tma='tmux attach'
-# alias tmn='tmux new -s $(basename $PWD)'
-
-# ---------- 智能自动进入 tmux ----------
-# 仅在没在 tmux 内、且是交互式 shell 时才自动 attach/新建
-# 逃生口：touch ~/.notmux 即可跳过自动进入 tmux（用完 rm ~/.notmux 恢复）
-if command -v tmux &>/dev/null && [ -z "$TMUX" ] && [ -z "$VTERM" ] && [ -n "$PS1" ] && [ ! -f "$HOME/.notmux" ]; then
-  # 让 tmux 直接用 fish 作为 shell，避免经过 bash→fish 跳转
-  SHELL=$(command -v fish) exec tmux new-session -A -s main
+# ---------- tmux 自动启动（可选）----------
+if command -v tmux &>/dev/null && \
+   [ -z "$TMUX" ] && [ -z "$VTERM" ] && [ -n "$PS1" ] && \
+   [ ! -f "$HOME/.notmux" ]; then
+    if exec tmux new-session -A -s main; then :; fi
+    # 失败则继续，不阻止后续逻辑
 fi
 
-# 如果让fish作为登录shell会出问题，而在tty中，fish的显示也会出问题，不如用bash
-if command -v fish >/dev/null 2>&1 && [[ $- == *i* ]] && ! shopt -q login_shell; then
-  # 如果不是从 fish 启动的，则切换到 fish
-  if [[ -z "$BASH_EXECUTED_FROM_FISH" ]]; then
-    exec fish
-  fi
-fi
 # 历史记录设置
 HISTSIZE=10000
 HISTFILESIZE=20000
@@ -110,3 +101,27 @@ fi
 
 # ---------- Prompt ----------
 PS1='╭─[\[\033[1;35m\]\u@\h\[\033[0m\] \[\033[1;34m\]\w\[\033[0m\]]$(__git_ps1_custom)\n╰─\[\033[1;32m\]\$ \[\033[0m\]'
+
+# ---------- 切换到 Fish（强化版）----------
+if command -v fish &>/dev/null && ! shopt -q login_shell; then
+    # 1. 父进程不是 fish（防止 Fish -> Bash -> Fish 死循环）
+    ppid_name=$(ps -o comm= -p $PPID 2>/dev/null)
+    if [[ "$ppid_name" == "fish" ]]; then
+        return
+    fi
+
+    # 2. SHLVL 限制：仅在最外层或第二层时切换（借鉴 Arch Wiki）
+    #    可根据需要调整数字。若不想要此限制，删除下面两行即可。
+    if [[ $SHLVL -gt 2 ]]; then
+        return
+    fi
+
+    # 3. 将登录标志传递给 fish（如果当前 bash 是 login shell）
+    if shopt -q login_shell; then
+        exec fish --login
+    else
+        exec fish
+    fi
+fi
+
+export PATH="/home/peng/.local/bin:$PATH"

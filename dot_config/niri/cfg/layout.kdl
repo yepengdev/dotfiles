@@ -23,9 +23,19 @@ layout {
         proportion 1.0
     }
 
+    border {
+        width 2
+        active-color "#80c8ff"
+        inactive-color "#404040"
+    }
+
     focus-ring {
         width 4
         active-gradient from="#80c8ff" to="#bbddff" angle=45
+    }
+
+    insert-hint {
+        color "#80c8ff80"
     }
 
     shadow {
