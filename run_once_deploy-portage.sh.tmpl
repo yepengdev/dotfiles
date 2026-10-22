@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-PORTAGE_SRC="{{ .chezmoi_source_dir }}/dot_config/portage"
+PORTAGE_SRC="{{ .chezmoi.sourceDir }}/dot_config/portage"
 PORTAGE_DST="/etc/portage"
 
 if [ ! -d "$PORTAGE_SRC" ]; then

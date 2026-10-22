@@ -1,196 +1,241 @@
-;;; init.el -*- lexical-binding: t; -*-
+;;; init.el --- Doom module declaration -*- lexical-binding: t; -*-
 
-;; 启用 use-package 载入统计（用于分析启动速度）
-
-;; 此文件控制 Doom 启用哪些模块及其加载顺序。
-;; 修改后请记得运行 'doom sync'！
-
-;; 提示：按 'SPC h d h'（非 vim 用户按 'C-h d h'）查看 Doom 文档。
-;;   那里有 Doom 模块索引的链接，列出了所有模块及其支持的标记。
-
-;; 提示：将光标移到模块名称（或其标记）上，按 'K'（或
-;;   'C-c c k'，非 vim 用户）查看文档。标记（以加号开头的符号）
-;;   同样适用。
+;; This file answers exactly one question: which Doom modules are enabled, and
+;; in what order they load. Per-module behaviour (fonts, keybinds, export
+;; pipeline, input method, CJK handling, ...) lives in config.el and the
+;; numbered fragments under lisp/. No setq, defun, hook or `after!' form
+;; belongs here.
 ;;
-;;   或者，在模块上按 'gd'（或 'C-c c d'）浏览其目录（方便查看源码）。
+;; ---------------------------------------------------------------------------
+;; Scope and how changes take effect
+;; ---------------------------------------------------------------------------
+;;   init.el, packages.el    -> run `doom sync' (recomputes packages + autoloads)
+;;   config.el, lisp/*.el    -> `M-x doom/reload' is enough
+;;
+;; ---------------------------------------------------------------------------
+;; Where modules come from
+;; ---------------------------------------------------------------------------
+;;   native    ~/.config/emacs/sources/doom+/modules/   shipped with Doom
+;;   custom    $DOOMDIR/modules/                        maintained in this repo
+;;   packages  $DOOMDIR/packages.el `package!' forms    no module slot
+;;
+;; Custom modules are declared exactly like native ones: Doom resolves them
+;; through `doom-module-load-path', where $DOOMDIR/modules/ comes first. To keep
+;; the two sets apart at a glance, every custom module below carries a
+;; `[custom]' marker together with its path. For the runtime picture - resolved
+;; directory, origin and flags for every enabled module - run
+;; `M-x my/describe-doom-modules' (implemented in lisp/80-tools.el).
+;;
+;; Custom modules declared in this file:
+;;   :tools notes      $DOOMDIR/modules/tools/notes
+;;   :tools novel      $DOOMDIR/modules/tools/novel
+;;   :tools pomodoro   $DOOMDIR/modules/tools/pomodoro
+;;   :tools cjk        $DOOMDIR/modules/tools/cjk
+;;   :tools jieba      $DOOMDIR/modules/tools/jieba       (declared, disabled)
+;;   :ffi   dyncall    $DOOMDIR/modules/ffi/dyncall
+;;   :editor meow      $DOOMDIR/modules/editor/meow       (declared, disabled)
+;;
+;; ---------------------------------------------------------------------------
+;; Reading this file
+;; ---------------------------------------------------------------------------
+;; Commented-out entries are a menu of options, not dead weight: they record
+;; what was considered. Enabled modules with a dependency gap state the
+;; criterion (which binary is missing, why it stays off) so the evaluation does
+;; not have to be repeated. Press K (or C-c c k) on a module for its manual,
+;; gd to open its source directory.
 
 (doom! :input
-       ;;bidi              ; 帮助你从右到左书写
-       ;;chinese           ; 中文拼音首字母搜索 — 自己配置了 fcitx + evil-pinyin
-       ;;japanese           ; 日语输入支持
-       ;;layout            ; auie,ctsrnm 是更优秀的主行键位
+       ;;bidi              ; right-to-left script support
+       ;;chinese           ; pinyin first-letter search - handled by fcitx + evil-pinyin
+       ;;japanese          ; Japanese input support
+       ;;layout            ; auie,ctsrnm is the superior home row
 
        :completion
-       ;;company           ; 终极代码补全后端
-       (corfu +orderless +dabbrev)  ; 使用 cap(f)、cape 补全，如羽毛般轻盈！
-       ;;helm              ; *另一个*寻找爱与生活的搜索引擎
-       ;;ido               ; 另一个*另一个*搜索引擎……
-       ;;ivy               ; 一个寻找爱与生活的搜索引擎
-       (vertico +childframe +icons)           ; 未来的搜索引擎
+       ;;company           ; the ultimate code completion backend
+       (corfu +orderless +dabbrev)   ; in-buffer completion: Capf + fuzzy + dabbrev
+       ;;helm              ; *another* search engine for love and life
+       ;;ido               ; the other *other* search engine...
+       ;;ivy               ; a search engine for love and life
+       (vertico +childframe +icons)  ; vertical completion UI (the search half)
 
        :ui
-       deft              ; Emacs 版的 Notational Velocity
-       doom              ; 让 DOOM 呈现其样貌的配置
-       ;;dashboard         ; Emacs 的漂亮启动画面
-       ;;doom-quit         ; 退出 Emacs 时的 DOOM 退出提示
+       deft              ; Notational Velocity for Emacs (notes depends on it)
+       doom              ; what makes DOOM look like DOOM
+       ;;dashboard         ; a splash screen with pretty pictures
+       ;;doom-quit         ; DOOM quit prompt when quitting Emacs
        emoji             ; 🙂
-       hl-todo           ; 高亮 TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
-       indent-guides     ; 高亮缩进列
-       (ligatures +extra)         ; 连字和符号，让代码重新变漂亮
-       ;;minimap           ; 在侧边显示代码缩略图
-       modeline          ; 时尚的 Atom 风格模式行，带 API
-       nav-flash         ; 大范围移动后闪烁光标所在行
-       ;;neotree           ; 项目文件树，类似 vim 的 NERDTree
-       ophints           ; 高亮操作所作用的区域
-       (popup +defaults)   ; 驯服突然出现的临时窗口
-       ;;smooth-scroll     ; 流畅丝滑，让你不相信这不是黄油
-       ;;tabs              ; Emacs 标签栏
-       treemacs           ; 项目文件树，比 neotree 更酷
-       ;;unicode           ; 各种语言的扩展 Unicode 支持
-       (vc-gutter +pretty) ; 边缘显示版本控制差异
-       ;;vi-tilde-fringe   ; 在缓冲区末尾外显示波浪线
-       (window-select +numbers)     ; 可视化切换窗口
-       workspaces        ; 标签模拟、持久化及独立工作区
-
-       zen               ; 无干扰编码或写作
+       hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
+       indent-guides     ; highlighted indent columns
+       ;;(ligatures +extra) ; ligatures and symbols to make code pretty again
+       ;;minimap           ; code minimap in the side margin
+       modeline          ; snazzy Atom-style mode line, with an API
+       nav-flash         ; blink the current line after big motions
+       ;;neotree           ; a project tree, like vim's NERDTree
+       ophints           ; highlight the region an operation acts on
+       (popup +defaults) ; tame sudden temporary windows
+       ;;smooth-scroll     ; so smooth you will not believe it is not butter
+       ;;tabs              ; a tab bar for Emacs
+       treemacs          ; a project tree, cooler than neotree
+       ;;unicode           ; extended unicode support for various languages
+       (vc-gutter +pretty) ; version control diff in the fringe
+       ;;vi-tilde-fringe   ; tildes beyond the end of the buffer
+       (window-select +numbers) ; visually switch windows
+       workspaces        ; tab emulation, persistence and separate workspaces
+       zen               ; distraction-free coding or writing
 
        :editor
-       (evil +everywhere); 加入黑暗面，我们有好吃的饼干
-       file-templates    ; 空文件的自动模板片段
-       fold              ; （近乎）通用的代码折叠
-       (format +onsave)          ; 自动格式化（手动按 SPC m f）
-       ;;god               ; 无需修饰键运行 Emacs 命令
-       ;;lispy             ; 给不喜欢 vim 的人用的 lisp 模式
-       multiple-cursors  ; 同时在多处编辑
-       ;;objed             ; 面向无辜者的文本对象编辑
-       ;;parinfer          ; 把 lisp 变成 python，差不多吧
-       ;;rotate-text       ; 在光标处的文本候选项间循环切换
-       snippets          ; 我的小精灵：它们打字，我不用动手
-       (whitespace +guess +trim)  ; 空白字符管家
-       ;;word-wrap         ; 感知语言缩进的软换行
+       (evil +everywhere) ; come to the dark side, we have cookies
+       ;;meow              ; [custom] alternative modal editing; parked in attic.el
+       file-templates    ; auto-snippets for empty files
+       fold              ; (nearly) universal code folding
+       (format +onsave)  ; format on save via apheleia (SPC m f also works)
+       ;;god               ; run Emacs commands without modifier keys
+       ;;lispy             ; vim for lisp, for people who do not like vim
+       multiple-cursors  ; editing in many places at once
+       ;;objed             ; text object editing for the innocent
+       ;;parinfer          ; turn lisp into python, sort of
+       ;;rotate-text       ; cycle through the text at point
+       snippets          ; my elves: they type, so I do not have to
+       (whitespace +guess +trim) ; the whitespace butler
+       word-wrap         ; soft wrapping with language-aware indent
 
        :emacs
-       (dired +dirvish +icons)             ; 让 dired 变得漂亮且实用
-       electric          ; 更智能的基于关键字的 electric-indent
-       ;;eww               ; 互联网很糟糕
-       (ibuffer +icons)           ; 交互式缓冲区管理
-       tramp             ; 远程文件触手可及
-       undo              ; 持久化、更智能的撤销
-       vc                ; 版本控制与 Emacs 和谐共处
+       (dired +dirvish +icons) ; making dired pretty and useful
+       electric          ; smarter, keyword-based electric-indent
+       ;;eww               ; the internet is a terrible place
+       (ibuffer +icons)  ; interactive buffer management
+       tramp             ; remote files at your fingertips
+       undo              ; persistent, smarter undo
+       vc                ; version control, living in harmony with Emacs
 
        :term
-       eshell            ; 随处可用的 elisp shell
-       ;;shell             ; Emacs 的简单 shell REPL
-       ;;term              ; Emacs 的基本终端模拟器
-       vterm             ; Emacs 中最好的终端模拟
+       eshell            ; the elisp shell that works everywhere
+       ;;shell             ; a simple shell REPL for Emacs
+       ;;term              ; the basic terminal emulator for Emacs
+       vterm             ; the best terminal emulation in Emacs
 
        :checkers
-       syntax              ; 为你遗漏的每个分号打你手心
-       ;;(spell +flyspell) ; 为你拼错的每个单词打你手心
-       ;;grammar           ; 为你犯的每个语法错误打你手心
+       syntax            ; tsk tsk tsk, for every semicolon you missed (flymake)
+       ;;(spell +flyspell) ; aspell/hunspell present but off: proofreading is manual
+       ;;grammar           ; tsk tsk tsk, for every grammar mistake you made
 
        :tools
-       ;;ansible            ; IT 自动化工具
-       ;;biblio            ; 帮你写博士论文（需要引用）
-       ;;collab            ; 与朋友共享缓冲区
-       ;;debugger          ; 单步调试代码，帮你增加 bug
-       ;;direnv             ; 自动加载环境变量
-       ;;docker             ; 容器管理
-       ;;editorconfig      ; 让别人争论制表符 vs 空格吧
-       ;;ein               ; 用 Emacs 驯服 Jupyter 笔记本
-       (eval +overlay)     ; 运行代码（还有 REPL）
-       (lookup +dictionary +docsets)              ; 浏览代码及其文档
-       ;;llm               ; 当我说你需要朋友时，我不是指……
-       ;;(lsp +eglot)      ; 把 Emacs 变成 VS Code
-       magit             ; Emacs 的 Git 前端
-       ;;make              ; 从 Emacs 运行 make 任务
-       notes      ; Denote + Deft 笔记系统（+film: 观影日记）
-       ;;pass              ; 给极客用的密码管理器
-       pdf               ; PDF 增强
-       pomodoro          ; 番茄钟 + 计时器 + 桌面通知
-       cjk               ; CJK 字符统计（纯 C 模块）
-       jieba             ; 结巴中文分词 + TF-IDF 关键词提取
-       ;;terraform         ; 基础设施即代码
-       ;;tmux              ; 与 tmux 交互的 API
-       tree-sitter       ; 语法解析，和谐共处……
-       ;;upload            ; 通过 ssh/ftp 将本地项目映射到远程
+       ;;ansible           ; an IT automation tool
+       ;;biblio            ; for your PhD (with citations)
+       ;;collab            ; share buffers with friends
+       ;;debugger          ; stepping through code, to help you add bugs
+       ;;direnv            ; load environment variables automatically
+       ;;docker            ; container management
+       ;;editorconfig      ; let someone else argue about tabs vs spaces
+       ;;ein               ; tame Jupyter notebooks with Emacs
+       (eval +overlay)     ; run code (and REPLs) inline
+       (lookup +dictionary +docsets) ; dict (wordnet) + docsets (none installed yet)
+       ;;llm               ; when I said you needed friends, I did not mean this
+       (lsp +eglot)        ; LSP client; clangd (llvm 21) serves :lang cc
+       magit               ; a git porcelain for Emacs
+       ;;make              ; run make tasks from Emacs
+       ;; notes +film (film diary, modules/tools/notes/contrib/film.el) stays
+       ;; off: the ~/org/denote/film/ silo exists but holds no notes yet; the
+       ;; flag would add a SPC r d v prefix.
+       notes               ; [custom] Denote + Deft notes (the knowledge backbone here)
+       ;;pass              ; a password manager for neckbeards
+       pdf                 ; pdf-tools enhancements
+       pomodoro            ; [custom] pomodoro timer + notifications (C module cnotify)
+       cjk                 ; [custom] CJK character counting (C module count-cjk.so)
+       novel               ; [custom] Scrivener-style fiction workbench
+       ;; jieba is declared but disabled: the [custom] module and
+       ;; c-modules/jieba-module.so are both ready, yet the dictionary costs
+       ;; 1-2s on first use and the note workflow does not need keyword
+       ;; extraction. Enable when it does.
+       ;;jieba             ; [custom] jieba segmentation + TF-IDF keywords
+       ;;terraform         ; infrastructure as code
+       ;;tmux              ; an API for interacting with tmux
+       tree-sitter         ; syntax parsing, living in harmony...
+       ;;upload            ; map a local project over ssh/ftp
 
        :lang
-
-       :ffi
-       dyncall            ; libffi 动态 FFI：在运行时调用任意 C 函数
-
-       :os
-       (:if (featurep :system 'macos) macos)  ; 改善 macOS 兼容性
-       tty               ; 改善终端 Emacs 体验
-
-       :lang
-       ;;ada               ; 强类型，我们（盲目）信任
-       ;;(agda +local)     ; 类型的类型的类型……
-       ;;beancount         ; 注意会计准则
-       ;;(cc +lsp)         ; C > C++ == 1
-       ;;clojure           ; 带 lisp 的 Java
-       ;;common-lisp       ; 如果你看过一种 lisp，就看过了所有
-       ;;coq               ; 证明即程序
-       ;;crystal           ; 有 C 速度的 Ruby
-       ;;csharp            ; Unity、.NET 和 Mono 的把戏
-       ;;data              ; 配置/数据格式
-       ;;(dart +flutter)   ; 绘制 UI，没别的了
-       ;;dhall              ; 类型安全的配置语言
-       ;;elixir            ; 正确实现的 Erlang
-       ;;elm               ; 来杯 TEA 吗？
-       emacs-lisp        ; 淹没在括号的海洋里
-       ;;erlang            ; 属于更文明时代的优雅语言
-       ;;ess               ; Emacs 说统计学
-       ;;factor             ; 栈式编程语言
-       ;;faust             ; 数字信号处理，但保留你的灵魂
-       ;;fortran           ; 在 FORTRAN 中，GOD 是 REAL（除非声明为 INTEGER）
-       ;;fsharp            ; ML 代表微软语言
-       ;;fstar             ;（依赖）类型、（单子）效应和 Z3
-       ;;gdscript          ; 你翘首以盼的语言
-       ;;(go +lsp)         ; 潮人方言
-       ;;(graphql +lsp)    ; 让查询歇会儿吧
-       ;;(haskell +lsp)    ; 一种比我更懒的语言
-       ;;hy                ; Scheme 的可读性，Python 的速度
-       ;;idris             ; 一种你可以信赖的语言
-       ;;json              ; 至少不是 XML
-       ;;janet             ; 有趣的事实：Janet 就是我！
-       ;;(java +lsp)       ; 腕管综合症的代言人
-       ;;javascript        ; 入此门者，当放弃一切希望
-       ;;julia             ; 更好、更快的 MATLAB
-       ;;kotlin            ; 更好、更流畅的 Java(Script)
-       (latex +cdlatex +fold) ; 用 Emacs 写论文从未如此有趣
-       ;;lean              ; 给需要证明太多东西的人
-       ;;ledger            ; 做你可被审计的人
-       ;;lua               ; 从 1 开始索引？对，从 1 开始
-       markdown          ; 写文档供人们忽略
-       ;;nim               ; 速度如 C 的 Python + Lisp
-       ;;nix               ; 我在此宣布："nix 更厉害！"
-       ;;ocaml             ; 一只客观的骆驼
-       ;;odin              ; C，去掉了它的暗器
-       (org +journal +noter +pretty +pandoc)               ; 用纯文本组织你的平淡生活
-       ;;php               ; Perl 不安全的弟弟
-       ;;plantuml          ; 用来让更多人困惑的图表
-       ;;graphviz          ; 用来让自己更困惑的图表
-       ;;purescript        ; JavaScript，但是函数式
-       ;;python            ; 美丽胜于丑陋
-       ;;qt                ; 史上最"可爱"的 GUI 框架
-       ;;racket            ; 领域特定语言的领域特定语言
-       ;;raku              ; 曾用名 perl6
-       ;;rest              ; Emacs 作为 REST 客户端
-       ;;rst               ; ReST in peace（安息吧，ReST）
+       ;;ada               ; types, we (blindly) trust
+       ;;(agda +local)     ; types of types of types...
+       ;;beancount         ; mind the accounting standards
+       (cc +lsp)           ; C > C++ == 1
+       ;;clojure           ; java with lisp
+       ;;common-lisp       ; if you have seen one lisp, you have seen them all
+       ;;coq               ; proofs-as-programs
+       ;;crystal           ; ruby at the speed of c
+       ;;csharp            ; unity, .NET and mono shenanigans
+       ;;data              ; config/data formats
+       ;;(dart +flutter)   ; paint ui and nothing else
+       ;;dhall             ; a configuration language for the paranoid
+       ;;elixir            ; erlang done right
+       ;;elm               ; care for a cup of TEA?
+       emacs-lisp          ; drowning in a sea of parentheses
+       ;;erlang            ; an elegant language for a more civilized age
+       ;;ess               ; emacs speaks statistics
+       ;;factor            ; a stack language
+       ;;faust             ; dsp, but keep your soul
+       ;;fortran           ; in FORTRAN, GOD is REAL (unless declared INTEGER)
+       ;;fsharp            ; ML stands for Microsoft's Language
+       ;;fstar             ; (dependent) types and (monadic) effects and Z3
+       ;;gdscript          ; the language you waited for
+       ;;(go +lsp)         ; the hipster dialect
+       ;;(graphql +lsp)    ; give queries a rest
+       ;;(haskell +lsp)    ; a language that is lazier than I am
+       ;;hy                ; readability of scheme, speed of python
+       ;;idris             ; a language you can depend on
+       ;;json              ; at least it is not XML
+       ;;janet             ; fun fact: Janet is me!
+       ;;(java +lsp)       ; the poster child for carpal tunnel syndrome
+       ;;javascript        ; all hope abandon, ye who enter here
+       ;;julia             ; a better, faster MATLAB
+       ;;kotlin            ; a better, slicker Java(Script)
+       (latex +cdlatex +fold) ; writing papers in Emacs has never been so fun
+       ;;lean              ; for folks with too much to prove
+       ;;ledger            ; be audit you can be
+       ;;lua               ; one-based indices? one-based indices
+       markdown          ; writing docs for people to ignore
+       ;;nim               ; python + lisp at the speed of c
+       ;;nix               ; I hereby declare "nix macht ja nichts"
+       ;;ocaml             ; an objective camel
+       ;;odin              ; c, but without the sharp edges
+       ;; org flags, one criterion each:
+       ;;   +journal org-journal / +noter org-noter PDF annotations /
+       ;;   +pretty org-modern / +pandoc ox-pandoc export (pandoc present) /
+       ;;   +present slides (centered-window, org-tree-slide installed) /
+       ;;   +roam org-roam installed, but nothing here calls its API - knowledge
+       ;;   management runs on Denote (see :tools notes)
+       (org +journal +noter +pretty +pandoc +present +roam)
+       ;;php               ; perl's insecure younger brother
+       ;;plantuml          ; diagrams for confusing people more
+       ;;graphviz          ; diagrams for confusing yourself more
+       ;;purescript        ; javascript, but functional
+       ;;python            ; beautiful is better than ugly
+       ;;qt                ; the "cutest" gui framework ever
+       ;;racket            ; a dsl for making dsls
+       ;;raku              ; the artist formerly known as perl6
+       ;;rest              ; emacs as a REST client
+       ;;rst               ; ReST in peace
        ;;(ruby +rails)     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
        ;;(rust +lsp)       ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-       ;;scala             ; Java，但很好
-       ;;(scheme +guile)   ; 一个完全狡黠的 lisp 家族
-       (sh +fish)                ; 她在 C xor 上叫卖 {ba,z,fi}sh 贝壳
-       ;;sml                ; 标准 ML 语言
-       ;;solidity          ; 你需要区块链吗？不需要。
-       ;;swift             ; 谁需要表情符号变量？
-       ;;terra             ; 地球与月球对齐，追求极致性能
-       ;;web               ; 网络管道
-       ;;yaml              ; JSON，但可读
-       ;;zig               ; C，但更简单
+       ;;scala             ; java, but good
+       ;;(scheme +guile)   ; a fully conniving lisp family
+       ;; sh +lsp needs bash-language-server, which is absent from exec-path
+       ;; (only installed under ~/.local/share/vim-lsp-settings/). Add the flag
+       ;; back once the binary is on PATH.
+       (sh +fish)          ; she sells {ba,z,fi}sh shells on the C xor
+       ;;sml               ; standard ML
+       ;;solidity          ; do you need blockchain? no.
+       ;;swift             ; who needs emoji variables?
+       ;;terra             ; earth and moon aligned, for maximum performance
+       ;;web               ; the tubes
+       ;;yaml              ; json, but readable
+       ;;zig               ; c, but simpler
+
+       :ffi
+       dyncall            ; [custom] libffi FFI: call any C function at runtime
+
+       :os
+       (:if (featurep :system 'macos) macos) ; macOS compatibility (no-op on Linux)
+       tty                ; improve the terminal Emacs experience
 
        :email
        ;;(mu4e +org +gmail)
@@ -198,12 +243,12 @@
        ;;(wanderlust +gmail)
 
        :app
-       ;;calendar           ; 日历应用
-       ;;emms               ; Emacs 多媒体系统
-       ;;everywhere        ; *离开* Emacs！？你一定是在开玩笑
-       ;;irc               ; 极客们的社交方式
-       ;;(rss +org)        ; Emacs 作为 RSS 阅读器
+       ;;calendar          ; a calendar for Emacs
+       ;;emms              ; the emacs multimedia system
+       ;;everywhere        ; *leave* Emacs!? You must be joking
+       ;;irc               ; how neckbeards socialise
+       ;;(rss +org)        ; emacs as an RSS reader
 
        :config
-       ;;literate           ; 文式编程配置
+       ;;literate          ; literate configuration
        (default +bindings +smartparens))

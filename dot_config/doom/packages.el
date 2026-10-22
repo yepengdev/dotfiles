@@ -33,3 +33,12 @@
 ;; 萌典使用 Emacs 内置 sqlite，无外部包依赖。
 ;;
 
+(package! ef-themes)
+(package! rainbow-delimiters)
+(package! svg-tag-mode)
+
+(package! chinese-word-at-point)
+
+;; (package! novel-manager
+;;   :recipe (:local-repo "~/Dev/emacs-dev/"
+;;            :files ("novel-manager*.el"))))

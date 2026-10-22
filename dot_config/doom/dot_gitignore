@@ -1,17 +1,5 @@
-c-modules/*.so
-c-modules/*.o
-c-modules/cjieba/demo
-tests-bench/flycheck_*
-*~
-\#*\#
-.\#*
-*.sqlite3
-dict/*.json
-startup-history.eld
-dict/
-.opencode/
-AGENTS.md
-REASONIX.md
+# Generated AUCTeX style cache
+.auctex-auto/
+
+# Byte-compiled configuration
 *.elc
-package-lock.json
-!c-modules/cjieba/dict/
