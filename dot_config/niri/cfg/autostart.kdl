@@ -1,32 +1,11 @@
-// ────────────── Startup Applications ──────────────
-// https://github.com/YaLTeR/niri/wiki/Configuration:-Miscellaneous#spawn-sh-at-startup
-// `spawn-at-startup` for direct executables, `spawn-sh-at-startup` for shell pipelines.
-
-// System tray: network manager indicator
 spawn-at-startup "nm-applet" "--indicator"
-
-// Input method framework (Fcitx5)
 spawn-at-startup "fcitx5"
-
-// Sidebar (window switcher / workspace overview)
+spawn-at-startup "FlClash"
 spawn-at-startup "/usr/local/bin/niri-sidebar" "listen"
-
-// Refresh D-Bus activation environment for child processes
 spawn-at-startup "dbus-update-activation-environment" "--all"
-
-// Noctalia shell (wallpaper, launcher, lock screen, settings)
-spawn-sh-at-startup "qs -c noctalia-shell"
-
-// Polkit authentication agent (privilege escalation UI)
+spawn-sh-at-startup "noctalia"
 spawn-at-startup "/usr/libexec/polkit-mate-authentication-agent-1"
-
-// xdg-desktop-portal (Wayland screen sharing, file picker, etc.)
-// -r flag replaces any running instance
 spawn-at-startup "/usr/libexec/xdg-desktop-portal" "-r"
-
-
-// Niri session manager (window restoration, env setup)
-// spawn-at-startup "nirinit"
-
-// Auto-maximize when only one window in workspace; -T = unmaximize on second window open
+spawn-at-startup "nirinit"
 spawn-at-startup "oniri"
+spawn-sh-at-startup "xrdb -merge ~/.Xresources"

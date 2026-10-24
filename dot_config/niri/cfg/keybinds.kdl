@@ -1,50 +1,36 @@
 binds {
-
-    // ────────────── Keybindings ──────────────
-    // https://github.com/YaLTeR/niri/wiki/Configuration:-Key-Bindings
-
-    // ─── Hotkey Overlay ───
     MOD+SHIFT+ESCAPE                     { show-hotkey-overlay; }
 
-    // ─── Applications ───
     MOD+RETURN                          hotkey-overlay-title="Open Terminal: foot (default)" { spawn "foot"; }
     MOD+SHIFT+RETURN                    hotkey-overlay-title="Open Terminal: kitty (alt)" { spawn "kitty"; }
-    MOD+SPACE                           hotkey-overlay-title="Open App Launcher" { spawn-sh "qs -c noctalia-shell ipc call launcher toggle"; }
-    MOD+B                               hotkey-overlay-title="Open Browser: Brave" { spawn "brave-browser-stable"; }
-    MOD+ALT+L                           hotkey-overlay-title="Lock Screen" { spawn-sh "qs -c noctalia-shell ipc call lockScreen lock"; }
+    Mod+Space                           { spawn-sh "noctalia msg panel-toggle launcher"; }
+    MOD+B                               hotkey-overlay-title="Open Browser: Brave" { spawn "/opt/brave-origin/brave-origin-nightly"; }
+    MOD+E                               hotkey-overlay-title="File Manager" { spawn-sh "foot -e yazi"; }
 
-    // Preset column width cycle (see layout.kdl for proportions)
+    Mod+Alt+L                           hotkey-overlay-title="Lock Screen: Noctalia" { spawn-sh "noctalia msg session lock"; }
+    Mod+Shift+A                         hotkey-overlay-title="Live Annotate" { spawn "noctalia" "msg" "annotate"; }
+    Mod+Shift+S                         hotkey-overlay-title="Freeze & Annotate" { spawn "noctalia" "msg" "screenshot-annotate"; }
+    Mod+Print                           hotkey-overlay-title="Region Screenshot" { spawn "noctalia" "msg" "screenshot-region"; }
+
     MOD+R                               hotkey-overlay-title="Next preset column width" { switch-preset-column-width; }
     MOD+SHIFT+R                         hotkey-overlay-title="Previous preset column width" { switch-preset-column-width-back; }
     MOD+SHIFT+CTRL+R                    hotkey-overlay-title="Next preset window height" { switch-preset-window-height; }
 
-    MOD+E                               hotkey-overlay-title="File Manager" { spawn-sh "foot -e yazi"; }
+    XF86AudioRaiseVolume                { spawn-sh "noctalia msg volume-up"; }
+    XF86AudioLowerVolume                { spawn-sh "noctalia msg volume-down"; }
+    XF86AudioMute                       { spawn-sh "noctalia msg volume-mute"; }
+    XF86MonBrightnessUp                 { spawn-sh "noctalia msg brightness-up"; }
+    XF86MonBrightnessDown               { spawn-sh "noctalia msg brightness-down"; }
 
-    // ─── Audio Controls ───
-    XF86AUDIORAISEVOLUME                allow-when-locked=true { spawn-sh "qs -c noctalia-shell ipc call volume increase"; }
-    XF86AUDIOLOWERVOLUME                allow-when-locked=true { spawn-sh "qs -c noctalia-shell ipc call volume decrease"; }
-    XF86AUDIOMUTE                       allow-when-locked=true { spawn-sh "qs -c noctalia-shell ipc call volume muteOutput"; }
-    XF86AUDIOMICMUTE                    allow-when-locked=true { spawn-sh "qs -c noctalia-shell ipc call volume muteInput"; }
-
-    // ─── Brightness ───
-    XF86MONBRIGHTNESSUP                 allow-when-locked=true { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "increase"; }
-    XF86MonBrightnessDown               allow-when-locked=true { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "decrease"; }
-
-    MOD+V                               hotkey-overlay-title="Open Clipboard History" { spawn-sh "qs -c noctalia-shell ipc call launcher clipboard"; }
-
-    // ─── niri-sidebar (window/workspace switcher panel) ───
-    MOD+S                               hotkey-overlay-title="Toggle sidebar window" { spawn-sh "/usr/local/bin/niri-sidebar toggle-window"; }
-    MOD+SHIFT+S                         hotkey-overlay-title="Toggle sidebar visibility" { spawn-sh "/usr/local/bin/niri-sidebar toggle-visibility"; }
+    MOD+V                               hotkey-overlay-title="Open Clipboard History" { spawn-sh "noctalia msg panel-toggle clipboard"; }
+    Mod+S                               { spawn-sh "noctalia msg panel-toggle control-center"; }
     MOD+CTRL+S                          hotkey-overlay-title="Flip sidebar order" { spawn-sh "/usr/local/bin/niri-sidebar flip"; }
     MOD+ALT+R                           hotkey-overlay-title="Reorder sidebar" { spawn-sh "/usr/local/bin/niri-sidebar reorder"; }
+    Mod+I                               { spawn-sh "noctalia msg settings-toggle"; }
 
-    // ─── Noctalia Settings ───
-    MOD+I                               hotkey-overlay-title="Open Noctalia Settings" { spawn-sh "qs -c noctalia-shell ipc call settings toggle"; }
-
-    // ─── Window Movement and Focus ───
     MOD+Q                               { close-window; }
 
-    ALT+Tab                             { focus-column-right; }
+    Alt+Tab                             { spawn-sh "noctalia msg window-switcher hold"; }
     ALT+SHIFT+Tab                       { focus-column-left; }
 
     MOD+LEFT                            { focus-column-left; }
@@ -56,12 +42,10 @@ binds {
     MOD+DOWN                            { focus-window-down; }
     MOD+J                               { focus-window-down; }
 
-    // Move workspace (in overview) / move column (normal)
     MOD+CTRL+LEFT                       { spawn-sh "bash /home/peng/.config/niri/scripts/niri_overview_bind.sh move-workspace-left move-column-left"; }
     MOD+CTRL+H                          { spawn-sh "bash /home/peng/.config/niri/scripts/niri_overview_bind.sh move-workspace-left move-column-left"; }
     MOD+CTRL+RIGHT                      { spawn-sh "bash /home/peng/.config/niri/scripts/niri_overview_bind.sh move-workspace-right move-column-right"; }
     MOD+CTRL+L                          { spawn-sh "bash /home/peng/.config/niri/scripts/niri_overview_bind.sh move-workspace-right move-column-right"; }
-    // Move workspace (in overview) / move window (normal)
     MOD+CTRL+UP                         { spawn-sh "bash /home/peng/.config/niri/scripts/niri_overview_bind.sh move-workspace-up move-window-up"; }
     MOD+CTRL+K                          { spawn-sh "bash /home/peng/.config/niri/scripts/niri_overview_bind.sh move-workspace-up move-window-up"; }
     MOD+CTRL+DOWN                       { spawn-sh "bash /home/peng/.config/niri/scripts/niri_overview_bind.sh move-workspace-down move-window-down"; }
@@ -82,8 +66,6 @@ binds {
     MOD+SHIFT+CTRL+UP                   { move-column-to-monitor-up; }
     MOD+SHIFT+CTRL+DOWN                 { move-column-to-monitor-down; }
 
-    // ─── Workspace Switching (via niri_workspace_helper) ───
-    // Skip empty workspaces (-s) and wrap around (-w)
     MOD+WHEELSCROLLDOWN                 cooldown-ms=150 { spawn "python3" "/home/peng/.config/niri/scripts/niri_workspace_helper.py" "down" "-s" "-w"; }
     MOD+WHEELSCROLLUP                   cooldown-ms=150 { spawn "python3" "/home/peng/.config/niri/scripts/niri_workspace_helper.py" "up" "-s" "-w"; }
     MOD+CTRL+WHEELSCROLLDOWN            cooldown-ms=150 { move-column-to-workspace-down; }
@@ -99,10 +81,8 @@ binds {
     MOD+CTRL+SHIFT+WHEELSCROLLDOWN      { move-column-right; }
     MOD+CTRL+SHIFT+WHEELSCROLLUP        { move-column-left; }
 
-    // Run command dialog (opens noctalia launcher in >cmd mode)
     MOD+CTRL+R                          hotkey-overlay-title="Run Command" { spawn-sh "qs -c noctalia-shell ipc call launcher command"; }
 
-    // Re-selecting the active workspace toggles overview (via niri_workspace_helper)
     MOD+1                               { spawn "python3" "/home/peng/.config/niri/scripts/niri_workspace_helper.py" "1"; }
     MOD+2                               { spawn "python3" "/home/peng/.config/niri/scripts/niri_workspace_helper.py" "2"; }
     MOD+3                               { spawn "python3" "/home/peng/.config/niri/scripts/niri_workspace_helper.py" "3"; }
@@ -123,11 +103,9 @@ binds {
     MOD+CTRL+8                          { move-column-to-workspace 8; }
     MOD+CTRL+9                          { move-column-to-workspace 9; }
 
-    // consume-or-expel: merge window into column or split it out
     MOD+Comma                           { consume-or-expel-window-left; }
     MOD+Period                          { consume-or-expel-window-right; }
 
-    // ─── Layout Controls ───
     MOD+CTRL+F                          { expand-column-to-available-width; }
     MOD+C                               { center-column; }
     MOD+CTRL+C                          { center-visible-columns; }
@@ -136,7 +114,6 @@ binds {
     MOD+SHIFT+MINUS                     { set-window-height "-10%"; }
     MOD+SHIFT+EQUAL                     { set-window-height "+10%"; }
 
-    // ─── Modes ───
     MOD+T                               { toggle-window-floating; }
     MOD+F                               { fullscreen-window; }
     MOD+SHIFT+F                         hotkey-overlay-title="Toggle Windowed Fullscreen" { toggle-windowed-fullscreen; }
@@ -145,19 +122,17 @@ binds {
     MOD+SHIFT+O                         hotkey-overlay-title="Toggle Window Opacity" { toggle-window-rule-opacity; }
     MOD+W                               { toggle-column-tabbed-display; }
 
-    // ─── Screenshots ───
-    CTRL+SHIFT+1                        { screenshot; }          // Select area, save to ~/Pictures/Screenshots
-    CTRL+SHIFT+2                        { screenshot-screen; }   // Entire current monitor
-    CTRL+SHIFT+3                        { screenshot-window; }   // Focused window only
+    Mod+Shift+N                         hotkey-overlay-title="Org Capture" {
+        spawn "emacsclient" "-a" "" "-c" "-F" "((name . \"org-capture-pop\") (width . 90) (height . 28))" "-e" "(org-capture)";
+    }
 
-    // ─── Emergency Escape ───
-    // Override keyboard shortcut inhibitor (use when a fullscreen app
-    // blocks your keybinds). allow-inhibiting=false ensures this works
-    // even when shortcuts are inhibited.
+    CTRL+SHIFT+1                        { screenshot; }
+    CTRL+SHIFT+2                        { screenshot-screen; }
+    CTRL+SHIFT+3                        { screenshot-window; }
+
     MOD+ESCAPE                          allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
 
-    // ─── Exit / Power ───
-    CTRL+ALT+DELETE                     { quit; }               // Quit niri (returns to DM / tty)
-    MOD+SHIFT+P                         { power-off-monitors; } // Blank monitors (OLED burn-in / privacy)
-    MOD+O                               repeat=false { toggle-overview; } // Workspace overview grid
+    CTRL+ALT+DELETE                     { quit; }
+    MOD+SHIFT+P                         { power-off-monitors; }
+    MOD+O                               repeat=false { toggle-overview; }
 }

@@ -1,15 +1,5 @@
-// ────────────── Output (Monitor) Configuration ──────────────
-// https://github.com/YaLTeR/niri/wiki/Configuration:-Outputs
-//
-// This file is a per-machine placeholder.
-// Run `niri msg outputs` to list your displays, then uncomment
-// and rename the output blocks below for your specific setup.
-//
-// Example:
-//   output "eDP-1" { scale 1.5; }
-//   output "DP-3" { mode 2560x1440@144; position x=0 y=0; }
-//
-// Use /- to uncomment a block:
-// /-output "eDP-1" {
-// /-    scale 1.5
-// /-}
+output "eDP-1" {
+    scale 1
+    position x=0 y=0
+    background-color "#1d1f21"
+}

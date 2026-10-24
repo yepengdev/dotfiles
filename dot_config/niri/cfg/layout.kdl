@@ -1,22 +1,18 @@
-// ────────────── Layout & Appearance ──────────────
-// https://github.com/YaLTeR/niri/wiki/Configuration:-Layout
-
 layout {
-    gaps 16                       // px between windows / screen edges
-    center-focused-column "never" // Don't auto-center the active column
-
+    gaps 10
+    center-focused-column "on-overflow"
     background-color "transparent"
 
-    default-column-width { proportion 0.5; }  // New windows open at half width
+    default-column-width { proportion 0.5; }
 
-    preset-column-widths {        // Cycle targets for MOD+R / MOD+SHIFT+R
+    preset-column-widths {
         proportion 0.33333
         proportion 0.5
         proportion 0.66667
         proportion 1.0
     }
 
-    preset-window-heights {       // Cycle targets for MOD+SHIFT+CTRL+R
+    preset-window-heights {
         proportion 0.33333
         proportion 0.5
         proportion 0.66667
@@ -24,25 +20,43 @@ layout {
     }
 
     border {
-        width 2
-        active-color "#80c8ff"
-        inactive-color "#404040"
+        off
     }
 
     focus-ring {
-        width 4
-        active-gradient from="#80c8ff" to="#bbddff" angle=45
+        on
+        width 2
+        active-gradient from="#89b4fa" to="#cba6f7" angle=35 relative-to="workspace-view"
+        inactive-color "#45475a"
+        urgent-color "#f38ba8"
     }
 
     insert-hint {
-        color "#80c8ff80"
+        gradient from="#89b4fa66" to="#cba6f766" angle=45
     }
 
     shadow {
         on
-        softness 30
-        spread 5
-        offset x=0 y=5
-        color "#00000070"
+        softness 36
+        spread 2
+        offset x=0 y=6
+        color "#00000045"
+        inactive-color "#0000001a"
+    }
+
+    tab-indicator {
+        hide-when-single-tab
+        place-within-column
+
+        gap 8
+        width 4
+        length total-proportion=0.75
+        position "left"
+        gaps-between-tabs 6
+        corner-radius 4
+
+        active-gradient from="#89b4fa" to="#cba6f7" angle=45 relative-to="workspace-view"
+        inactive-color "#45475a"
+        urgent-color "#f38ba8"
     }
 }
